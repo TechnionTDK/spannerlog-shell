@@ -30,8 +30,8 @@ case $key in
     RUN=true
     ;;
     sql)
-	SQL="$2"
-	;;
+    SQL="$2"
+    ;;
     *)
     print_error "$1: invalid command"
     print_help
@@ -46,38 +46,41 @@ DB="db.url"
 INPUT_DIR="input"
 UDF_DIR="udf"
 
+TARGET_DIR="target"
+TARGET="app.ddlog"
+UDF_TARGET_DIR="${TARGET_DIR}/udf"
+
 # compile
-if [ -n "$COMPILE" ]; then
-    if [ ! -f "$APP" ] || [ ! -f "$DB" ]; then
-        print_error "Not inside a Spannerlog application: $APP and db.url should be all present in a parent directory"
+if [ -n "${COMPILE}" ]; then
+    if [ ! -f "${APP}" ] || [ ! -f "${DB}" ]; then
+        print_error "Not inside a Spannerlog application: ${APP} and ${DB} should be all present in a parent directory"
         exit
     fi
 
     # delete old target directory and create a new one
-    rm -rf target
-    mkdir target
+    rm -rf ${TARGET_DIR}
+    mkdir ${TARGET_DIR}
+    mkdir ${UDF_TARGET_DIR}
 
     # create soft links
-    if [ -d "$INPUT_DIR" ]; then
-        ln -s "../$INPUT_DIR" "target/$INPUT_DIR"
+    if [ -d "${INPUT_DIR}" ]; then
+        ln -s "../${INPUT_DIR}" "${TARGET_DIR}/${INPUT_DIR}"
     fi
-    if [ -d "$UDF_DIR" ]; then
-        ln -s "../$UDF_DIR" "target/$UDF_DIR"
-    fi
-    ln -s "../$DB" "target/$DB"
+    ln -s "../${DB}" "${TARGET_DIR}/${DB}"
 
     # compile spannerlog program
-    if eval "${EXEC} -compile app.splog" > target/app.ddlog; then
-	   eval "cd target; deepdive compile; cd .."
+    if eval "${EXEC} -compile ${APP} ${UDF_DIR} ${UDF_TARGET_DIR}" > ${TARGET_DIR}/${TARGET}; then
+       # eval "cd target; deepdive compile; cd .."
+       echo pass
     fi
 fi
 
 # run
-if [ -n "$RUN" ]; then
-	eval "cd target; deepdive do all; cd .."
+if [ -n "${RUN}" ]; then
+    eval "cd ${TARGET_DIR}; deepdive do all; cd .."
 fi
 
 # execute an SQL query
-if [ -n "$SQL" ]; then
-	eval "cd target; deepdive sql \"${SQL}\"; cd .."
+if [ -n "${SQL}" ]; then
+    eval "cd ${TARGET_DIR}; deepdive sql \"${SQL}\"; cd .."
 fi

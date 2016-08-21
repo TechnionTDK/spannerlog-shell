@@ -2,3 +2,4 @@
 *.ddlog
 run/
 target/
+installation/init.sh
