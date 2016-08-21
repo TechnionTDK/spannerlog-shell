@@ -1,3 +1,4 @@
 *.jar
-run/
 *.ddlog
+run/
+target/
