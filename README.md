@@ -1,0 +1,1 @@
+# spannelog-shell
