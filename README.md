@@ -1,1 +1,1 @@
-# spannelog-shell
+# spannerlog-shell
