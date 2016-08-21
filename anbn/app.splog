@@ -1,0 +1,1 @@
+Q() :- doc(s), rgx1<s>(x,y), rgx2<s[y]>(x).

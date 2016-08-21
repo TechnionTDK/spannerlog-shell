@@ -1,0 +1,3 @@
+Path(x,y) :- Edge(x,y).
+Path(x,z) :- Edge(x,y),Path(y,z).
+InCycle(x) :- Path(x,x).
