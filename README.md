@@ -6,4 +6,7 @@
 
 ## Running
 The following command shows all available commands.
-`splog`
+
+```bash
+splog
+```
