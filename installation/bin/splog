@@ -19,6 +19,7 @@ cmd=$1; shift
 
 export SPLOG_HOME=$(dirname "$(dirname -- $0)")
 export PATH="$SPLOG_HOME/bin:$SPLOG_HOME/shell:$SPLOG_HOME/udf:$PATH"
+export CLASSPATH="$SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar:$CLASSPATH"
 
 # Check if command is valid
 exe=splog-"$cmd"
