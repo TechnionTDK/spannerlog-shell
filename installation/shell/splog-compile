@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -eu
+
+if [ ! -f "app.splog" ] || [ ! -f "db.url" ]; then
+    error "Not inside a Spannerlog application: app.splog and db.url should be all present in a parent directory"
+fi
+
+# delete old target directory and create a new one
+rm -rf target
+mkdir target
+
+# create soft links
+if [ -d "input" ]; then
+    ln -s "../input" "target/input"
+fi
+if [ -d "udf" ]; then
+    ln -s "../udf" "target/udf"
+fi
+ln -s "../db.url" "target/db.url"
+
+# compile spannerlog program
+(java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -compile app.splog) > target/app.ddlog
+if [ $? -eq 0 ]; then
+   cd target
+   deepdive compile
+   cd ..
+fi
+
