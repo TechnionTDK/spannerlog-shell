@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -eu
-
-# TODO compile each udf in udf/ to a deepdive in target/udf
-
-# TODO generate udf.schema.json file for spannerlog compiler
-
-

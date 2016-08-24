@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-if [ ! -f "app.splog" ] || [ ! -f "db.url" ]; then
+if [[ ! -e app.splog || ! -e db.url ]]; then
     error "Not inside a Spannerlog application: app.splog and db.url should be all present in a parent directory"
 fi
 
@@ -10,13 +10,11 @@ rm -rf target
 mkdir target
 
 # create soft links
-if [ -d "input" ]; then
-    ln -s "../input" "target/input"
-fi
-if [ -d "udf" ]; then
-    ln -s "../udf" "target/udf"
-fi
 ln -s "../db.url" "target/db.url"
+[[ -d input ]] && ln -s "../input" "target/input"
+[[ -d udf ]] && (compile-udf-dir.py) > target/schema.json
+
+exit
 
 # compile spannerlog program
 (java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -compile app.splog) > target/app.ddlog

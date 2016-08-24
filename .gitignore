@@ -3,3 +3,5 @@
 run/
 target/
 installation/init.sh
+__pycache__/
+*.pyc

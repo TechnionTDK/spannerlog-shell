@@ -1,17 +1,9 @@
 #!/usr/bin/env python
 
-from deepdive import *  # Required for @tsv_extractor and @returns
+#. s 	text
+#. x	span
 
-import re
-
-@tsv_extractor  # Declares the generator below as the main function to call
-@returns(lambda 
-        s = "text",
-        x = "text",
-    :[]) # Declares the types of output columns as declared in DDlog
-def rgx2(   # The input types can be declared directly on each parameter as its default value
-        s = "text"
-    ):
+def iefunc(s = "text"):
 	
 	# yield [s, "1,5"]
 	pattern = r"(?P<x>[b]+)"
