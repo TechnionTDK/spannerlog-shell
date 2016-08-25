@@ -2,7 +2,11 @@
 set -eu
 
 tput setaf 1
-echo "$1" >&2
+if [ $# -gt 0 ]; then
+	echo "$1" >&2	
+else
+	echo "Error!"
+fi
 tput sgr0
 
 false

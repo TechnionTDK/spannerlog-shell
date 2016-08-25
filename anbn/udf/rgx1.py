@@ -4,7 +4,7 @@
 #. x	span
 #. y 	span 
 
-def iefunc(s = "text"):
+def rgx1(s = "text"):
 
 	# yield [s, "1,5", "5,9"]
 

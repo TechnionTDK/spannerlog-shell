@@ -3,7 +3,7 @@
 #. s 	text
 #. x	span
 
-def iefunc(s = "text"):
+def rgx2(s = "text"):
 	
 	# yield [s, "1,5"]
 	pattern = r"(?P<x>[b]+)"
