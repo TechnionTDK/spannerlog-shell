@@ -4,7 +4,11 @@
 #. x	span
 #. y 	span 
 
-def rgx1(s = "text"):
+
+import re
+
+
+def rgx1(s):
 
 	# yield [s, "1,5", "5,9"]
 

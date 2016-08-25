@@ -42,8 +42,16 @@ def create_deepdive_udf(module, udf_schema, filename, module_name):
 		f_list = [func for name, func in functions if name == module_name]
 		if not f_list:
 			exit_with_message("IE function is missing: expecting a function with the name of the file")
-		if len(inspect.signature(f_list[0]).parameters) != 1:
+
+		sig = inspect.signature(f_list[0])
+		if len(sig.parameters) != 1:
 			exit_with_message("IE function should have a single parameter")
+
+		param = next(iter(sig.parameters.values()))
+		if param.default != inspect.Parameter.empty:
+			exit_with_message("Parameter of IE function should have no default value")
+		
+		sig = sig.replace(parameters=[param.replace(default="text")])
 
 		for line in inspect.getsourcelines(module)[0]:
 			if "def %s" % (module_name,) in line:
@@ -57,7 +65,7 @@ def create_deepdive_udf(module, udf_schema, filename, module_name):
 						outfile.write("\t%s_start = \"int\",\n" % (col_name, ))
 						outfile.write("\t%s_end = \"int\",\n" % (col_name, ))
 				outfile.write(":[])\n")
-				outfile.write(line)
+				outfile.write("def %s%s:\n" % (module_name, sig))
 			else:
 				outfile.write(line)
 

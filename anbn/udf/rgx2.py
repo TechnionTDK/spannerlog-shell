@@ -3,7 +3,11 @@
 #. s 	text
 #. x	span
 
-def rgx2(s = "text"):
+
+import re
+
+
+def rgx2(s):
 	
 	# yield [s, "1,5"]
 	pattern = r"(?P<x>[b]+)"

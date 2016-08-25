@@ -16,12 +16,13 @@ if [[ -d input ]]; then
 fi
 [[ -d udf ]] && (compile-udf-dir.py) > target/udf.schema.json
 
-exit
+# exit
 
 # compile spannerlog program
 (java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -compile app.splog) > target/app.ddlog
 if [ $? -eq 0 ]; then
    cd target
+   chmod -R 777 .* 
    deepdive compile
    cd ..
 fi
