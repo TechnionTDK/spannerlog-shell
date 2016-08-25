@@ -9,21 +9,23 @@ fi
 rm -rf target
 mkdir target
 
+schema=() 
 ln -s "../db.url" "target/db.url"
 if [[ -d input ]]; then
 	ln -s "../input" "target/input"
-	(extract-input-schema.py) > target/input.schema.json
+	(extract-input-schema.py) > target/edb.schema.json
+	schema+=(edb.schema.json)
 fi
-[[ -d udf ]] && (compile-udf-dir.py) > target/udf.schema.json
-
-# exit
+if [[ -d udf ]]; then
+	(compile-udf-dir.py) > target/udf.schema.json
+	schema+=(udf.schema.json)
+fi
 
 # compile spannerlog program
-(java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -compile app.splog) > target/app.ddlog
-if [ $? -eq 0 ]; then
-   cd target
-   chmod -R 777 .* 
-   deepdive compile
-   cd ..
-fi
-
+(java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -compile app.splog ${schema[*]}) > target/app.ddlog
+# if [ $? -eq 0 ]; then
+#    cd target
+#    chmod -R 777 .* 
+#    deepdive compile
+#    cd ..
+# fi
