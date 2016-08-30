@@ -4,6 +4,7 @@ import json
 import inspect
 from importlib.machinery import SourceFileLoader
 import sys
+from collections import OrderedDict
 
 
 DIR_SRC_NAME = 'udf'
@@ -78,9 +79,8 @@ def exit_with_message(msg):
 
 
 def extract_udf_schema(module):
-	udf_schema = {}
 	comments = [c[2:].split() for c in inspect.getcomments(module).split('\n') if c.startswith("#.")]
-	return {col_name: col_type for col_name, col_type in comments}
+	return OrderedDict([(col_name, col_type) for col_name, col_type in comments])
 
 
 if __name__ == "__main__":
