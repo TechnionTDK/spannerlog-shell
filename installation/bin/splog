@@ -25,7 +25,8 @@ exe=splog-"$cmd"
 if type "$exe" &>/dev/null; then
     set -- "$exe" "$@"
 else
-    error "$cmd: invalid command"
+    print-error "$cmd: invalid command"
+    exit
 fi
 
 # Run given command under this environment

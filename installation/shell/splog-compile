@@ -23,10 +23,10 @@ fi
 
 # compile spannerlog program
 cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]}"
-($cmd 2>&1>&3 | error) 3> target/app.ddlog
-# if [ $? -eq 0 ]; then
-#    cd target
-#    chmod -R 777 .* 
-#    deepdive compile
-#    cd ..
-# fi
+($cmd 2>&1>&3 | print-error) 3> target/app.ddlog
+
+cd target
+chmod -R 777 .* 
+deepdive compile
+cd ..
+
