@@ -23,7 +23,7 @@ if [[ -d udf ]]; then
 fi
 
 # compile spannerlog program
-cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]}"
+cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]:-}"
 ($cmd 2>&1>&3 | print-error) 3> target/splog.json
 
 (compile-to-ddlog.py target/splog.json target/udf) > target/app.ddlog
