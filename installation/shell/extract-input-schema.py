@@ -2,18 +2,16 @@
 import csv
 import os
 import json
-
-
-DIR_SRC_NAME = 'input'
+import sys
 
 
 def main():
 
 	db_schema = {}
 
-	for filename in os.listdir(DIR_SRC_NAME):
+	for filename in os.listdir(sys.argv[1]):
 		if filename.endswith('.tsv'):
-			with open(os.path.join(DIR_SRC_NAME, filename)) as infile:
+			with open(os.path.join(sys.argv[1], filename)) as infile:
 				reader = csv.reader(infile, delimiter='\t')
 
 				table_name = os.path.splitext(filename)[0]

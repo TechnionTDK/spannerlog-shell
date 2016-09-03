@@ -7,8 +7,8 @@ import sys
 from collections import OrderedDict
 
 
-DIR_SRC_NAME = 'udf'
-DIR_DST_NAME = os.path.join('target', 'udf')
+DIR_SRC_NAME = sys.argv[1]
+DIR_DST_NAME = sys.argv[2]
 
 
 def main():

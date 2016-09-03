@@ -13,11 +13,11 @@ schema=()
 ln -s "../db.url" "target/db.url"
 if [[ -d input ]]; then
 	ln -s "../input" "target/input"
-	(extract-input-schema.py) > target/edb.schema.json
+	(extract-input-schema.py input) > target/edb.schema.json
 	schema+=(-edb target/edb.schema.json)
 fi
 if [[ -d udf ]]; then
-	(compile-udf-dir.py) > target/udf.schema.json
+	(compile-udf-dir.py udf target/udf) > target/udf.schema.json
 	schema+=(-udf target/udf.schema.json)
 fi
 
