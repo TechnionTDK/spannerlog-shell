@@ -1,0 +1,1 @@
+Q() :- doc(s), RGX<s>\[x{a*}y{b*}]\, RGX<s[y]>\[x{b*}]\.

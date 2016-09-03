@@ -8,6 +8,7 @@ fi
 # delete old target directory and create a new one
 rm -rf target
 mkdir target
+mkdir target/udf
 
 schema=()
 ln -s "../db.url" "target/db.url"
@@ -25,7 +26,7 @@ fi
 cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]}"
 ($cmd 2>&1>&3 | print-error) 3> target/splog.json
 
-(compile-to-ddlog.py target/splog.json) > target/app.ddlog
+(compile-to-ddlog.py target/splog.json target/udf) > target/app.ddlog
 
 cd target
 chmod -R 777 .* 

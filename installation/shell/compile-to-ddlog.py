@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import sys
 from collections import OrderedDict
@@ -9,8 +10,8 @@ def main():
 	with open(sys.argv[1]) as conf_file:
 		conf = json.load(conf_file, object_pairs_hook=OrderedDict)
 
-		compile_schema(conf["schema"])
-		compile_ie_functions(conf["ie-functions"])
+		compile_schema(conf["schema"])		
+		compile_ie_functions(conf["ie-functions"], conf["schema"], sys.argv[2])
 		compile_rules(conf["rules"])
 
 
@@ -29,7 +30,7 @@ def compile_schema(schema):
 		print("\t" + ",\n\t".join(attr_strings) + "\n).\n")
 
 
-def compile_ie_functions(ie_functions):
+def compile_ie_functions(ie_functions, schema, target_udf_dir):
 	for ief in ie_functions:
 		name = ief["name"]
 
@@ -37,6 +38,39 @@ def compile_ie_functions(ie_functions):
 			  "returns rows like " + name + "\n\t" + \
 			  "implementation \"udf/" + name + ".py\" handles tsv lines.\n\n" + \
 			  ief["function-call-rule"] + "\n")
+
+		if "regex" in ief:
+			create_regex_udf(ief, 
+				[rel_schema["attributes"] for rel_schema in schema if rel_schema["name"] == name][0],
+				target_udf_dir)
+
+
+def create_regex_udf(ief, attrs, target_udf_dir):
+	with open(os.path.join(target_udf_dir, ief["name"]+".py"), "w") as outfile:
+		outfile.write("#!/usr/bin/env python\n\n")
+		outfile.write("from deepdive import *\n\n")
+		outfile.write("import re\n\n")
+		outfile.write("@tsv_extractor\n")
+		outfile.write("@returns(lambda\n")
+		for attr_name, attr_type in attrs.items():
+			if attr_type != "span":
+				outfile.write("\t%s = \"%s\",\n" % (attr_name, attr_type))
+			else:
+				outfile.write("\t%s_start = \"int\",\n" % (attr_name, ))
+				outfile.write("\t%s_end = \"int\",\n" % (attr_name, ))
+		outfile.write(":[])\n")
+		outfile.write("def %s(s = \"text\"):\n\n" % (ief["name"], ))
+		outfile.write("\tpattern = re.compile(r\"%s\")\n" % (ief['regex'], ))
+		outfile.write("\tmatch = pattern.match(s)\n")
+		outfile.write("\tif match:\n")
+		outfile.write("\t\tyield [\n")
+		outfile.write("\t\t\ts,\n")
+		for attr in list(attrs.keys())[1:]:
+			outfile.write("\t\t\tmatch.start('%s') + 1,\n" % (attr, ))
+			outfile.write("\t\t\tmatch.end('%s') + 1,\n" % (attr, ))
+		outfile.write("\t\t]\n\n")
+		# outfile.write("\telse:\n")
+		# outfile.write("\t\tyield [\"ds\",1,2,3,4]\n\n")
 
 
 def compile_rules(rules):
