@@ -14,9 +14,6 @@ DIR_DST_NAME = sys.argv[2]
 def main():
 	global DIR_SRC_NAME, DIR_DST_NAME
 
-	# create directory for compiled UDFs
-	os.mkdir(DIR_DST_NAME)
-
 	db_schema = {}	
 
 	# iterate over all python files in 'udf' directory
@@ -32,7 +29,7 @@ def main():
 
 			db_schema[module_name] = udf_schema
 
-	print(json.dumps(db_schema, sort_keys=True, indent=4))
+	print(json.dumps(db_schema, sort_keys=False, indent=4))
 
 
 def create_deepdive_udf(module, udf_schema, filename, module_name):
