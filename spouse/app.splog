@@ -1,3 +1,19 @@
-sentences(doc_id, sentence_index, sentence_text, tokens, pos_tags, ner_tags) :- 
-    articles(doc_id, s),
-    nlp_markup<s>(sentence_index, sentence_text, tokens, pos_tags, ner_tags).
+articles_prep(doc_id, content) :- articles(doc_id, s), preprocess<s>(content).
+
+
+
+sentences(doc_id, sentence_index, content[sentence_span]) :- 
+    articles_prep(doc_id, content), ssplit<content>(sentence_index, sentence_span).
+
+
+
+person_mention(sentence_text[span], doc_id, sentence_index, span) :-
+	sentences(doc_id, sentence_index, sentence_text), ner<sentence_text>(span, "PERSON").
+
+
+#
+# spouse_candidate() :-
+#    person_mention(mention_text1, doc_id, sentence_index, span1),
+#    person_mention(mention_text2, doc_id, sentence_index, span2).
+#
+
