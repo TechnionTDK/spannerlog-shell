@@ -5,9 +5,6 @@
 
 import re
 
-from pycorenlp import StanfordCoreNLP
-nlp = StanfordCoreNLP('http://localhost:9000')
-
 def preprocess(s):
 
 	t = str(s.decode('ascii', 'ignore'))

@@ -22,32 +22,25 @@ def ner(s):
     for sen in res["sentences"]:
         begin = -1
         end = -1
-        ner_tag = "O"
+        ner_prev = "O"
         for token in sen["tokens"]:
-            ner_tag_inner = str(token["ner"])
-            if ner_tag_inner == ner_tag:
-                end = token["characterOffsetEnd"] + 1
+            ner_curr = str(token["ner"])
+            if ner_curr == ner_prev:
+                end = token["characterOffsetEnd"]
             else:
                 if begin == -1 :
-                    begin = token["characterOffsetBegin"] + 1
-                    end = token["characterOffsetEnd"] + 1
-                    ner_tag = ner_tag_inner
+                    begin = token["characterOffsetBegin"]
+                    end = token["characterOffsetEnd"]
+                    ner_prev = ner_curr
                 else:
-                    yield [s, begin, end, ner_tag]
-                    if ner_tag_inner != "O":
-                        begin = token["characterOffsetBegin"] + 1
-                        end = token["characterOffsetEnd"] + 1
-                        ner_tag = ner_tag_inner
+                    yield [s, begin + 1, end + 1, ner_prev]
+                    if ner_curr != "O":
+                        begin = token["characterOffsetBegin"]
+                        end = token["characterOffsetEnd"]
+                        ner_prev = ner_curr
                     else:
                         begin = -1
                         end = -1
-                        ner_tag = "O"
+                        ner_prev = "O"
         if begin != -1:
-            yield [s, begin, end, ner_tag]
-
-            # yield [
-            #   s,
-            #   token["characterOffsetBegin"], 
-            #   token["characterOffsetEnd"], 
-            #   str(token["ner"]),
-            # ]
+            yield [s, begin + 1, end + 1, ner_prev]
