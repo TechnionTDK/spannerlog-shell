@@ -1,45 +1,15 @@
-# Preprocessing the input data.
-#
-# The IE-function preprocesses<> removes all non-ascii characters from the input string.
-#
 articles_prep(doc_id, content) :- articles(doc_id, content_raw), preprocess<content_raw>(content).
 
 
 
-# Splitting the input data into sentences.
-#
-# The IE-function 'ssplit<>' is a wrapper function for the Sentence Splitting 
-# annotator of CoreNLP.
-#
-# The 'sentence_span' variable is of type 'span', which is defined by two integers
-# that represent the start index and end index of each sentence.
-#
-# To get the text of each sentence, we take the the corresponding substring of the
-# input data by using the expression 'content[sentence_span]'.
-#
-#
-sentences(doc_id, sentence_index, content[sentence_span]) :- 
-    articles_prep(doc_id, content), ssplit<content>(sentence_index, sentence_span).
-
-
-
-
-# Extracting mentions of persons.
-#
-# The IE-function 'ner<>' extracts contiguous tokens with NER tags (not including
-# the 'O' tag) as annotated by the NER annotator of CoreNLP.
-#
-person_mention(sentence_text[span], doc_id, sentence_index, span) :-
+person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) :-
 	articles_prep(doc_id, content),
-	ssplit<content>(sentence_index, sentence_span),
-	ner<content[sentence_span]>(span, "PERSON").
+	ssplit<content>(_, sentence_span),
+	ner<content[sentence_span]>(ner_span, "PERSON").
 
 
 
-
-# Extracting spouse candidates.
-#
-spouse_candidate(doc_id, sentence_index, span1, span2) :-
-   person_mention(mention_text1, doc_id, sentence_index, span1),
-   person_mention(mention_text2, doc_id, sentence_index, span2).
+# spouse_candidate(doc_id, sentence_index, span1, span2) :-
+#    person_mention(mention_text1, doc_id, sentence_index, span1),
+#    person_mention(mention_text2, doc_id, sentence_index, span2).
 

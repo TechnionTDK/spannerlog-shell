@@ -7,7 +7,7 @@
 
 from pycorenlp import StanfordCoreNLP
 
-nlp = StanfordCoreNLP('http://localhost:9000')
+nlp = StanfordCoreNLP('http://tdk2.cs.technion.ac.il:80')
 
 def ner(s):
 
