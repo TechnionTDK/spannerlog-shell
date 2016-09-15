@@ -2,14 +2,14 @@ articles_prep(doc_id, content) :- articles(doc_id, content_raw), preprocess<cont
 
 
 
+sentences(content[sentence_span], doc_id, sentence_span) :-
+	articles_prep(doc_id, content),
+	ssplit<content>(_, sentence_span).
+
+
+
 person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) :-
 	articles_prep(doc_id, content),
 	ssplit<content>(_, sentence_span),
 	ner<content[sentence_span]>(ner_span, "PERSON").
-
-
-
-# spouse_candidate(doc_id, sentence_index, span1, span2) :-
-#    person_mention(mention_text1, doc_id, sentence_index, span1),
-#    person_mention(mention_text2, doc_id, sentence_index, span2).
 
