@@ -11,13 +11,14 @@ def main():
 		conf = json.load(conf_file, object_pairs_hook=OrderedDict)
 
 		compile_schema(conf["schema"])		
-		compile_ie_functions(conf["ie-functions"], conf["schema"], sys.argv[2])
+		compile_ie_functions(conf["ie_functions"], conf["schema"], sys.argv[2])
 		compile_rules(conf["rules"])
 
 
 def compile_schema(schema):
 	for rel_schema in schema:
-		print(rel_schema["name"] + " (")
+		predVar = "?" if "predict_var" in rel_schema else ""
+		print(rel_schema["name"] + predVar + " (")
 		attrs = []
 		for attr_name, attr_type in rel_schema["attributes"].items():
 			if attr_type == "span":
@@ -37,7 +38,7 @@ def compile_ie_functions(ie_functions, schema, target_udf_dir):
 		print("function " + name + " over (s text)\n\t" + \
 			  "returns rows like " + name + "\n\t" + \
 			  "implementation \"udf/" + name + ".py\" handles tsv lines.\n\n" + \
-			  ief["function-call-rule"] + "\n")
+			  ief["statement"] + "\n")
 
 		if "regex" in ief:
 			create_regex_udf(ief, 
@@ -74,8 +75,11 @@ def create_regex_udf(ief, attrs, target_udf_dir):
 
 
 def compile_rules(rules):
-	for rule in rules:
-		print(rule + "\n")
+	for rule_obj in rules:
+		if "weight" in rule_obj:
+			w = rule_obj["weight"] if not None else "?"
+			print("@weight(\""+w+"\")")				
+		print(rule_obj["statement"] + "\n")
 
 
 if __name__ == "__main__":

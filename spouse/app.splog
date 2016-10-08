@@ -1,15 +1,87 @@
-articles_prep(doc_id, content) :- articles(doc_id, content_raw), preprocess<content_raw>(content).
 
+## Data processing ##
 
+articles_prep(doc_id, content) <- articles(doc_id, content_raw), preprocess<content_raw>(content).
 
-sentences(content[sentence_span], doc_id, sentence_span) :-
+sentences(content[sentence_span], doc_id, sentence_span) <-
 	articles_prep(doc_id, content),
 	ssplit<content>(_, sentence_span).
 
-
-
-person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) :-
+person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) <-
 	articles_prep(doc_id, content),
 	ssplit<content>(_, sentence_span),
 	ner<content[sentence_span]>(ner_span, "PERSON").
+
+spouse_candidate(doc_id, sentence_span, person_span1, person_span2) <-
+   person_mention(name1, doc_id, sentence_span, person_span1),
+   person_mention(name2, doc_id, sentence_span, person_span2),
+   name1 != name2,
+   person_span1 != person_span2.
+
+
+
+## Distant Supervision ##
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+    spouses_dbpedia(n1, n2),
+    articles_prep(doc_id, content),
+    lower(n1) = lower(content[sentence_span][person_span1]), lower(n2) = lower(content[sentence_span][person_span2]).
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+    spouses_dbpedia(n1, n2),
+    articles_prep(doc_id, content),
+    lower(n2) = lower(content[sentence_span][person_span1]), lower(n1) = lower(content[sentence_span][person_span2]).
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:married_after") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles_prep(doc_id, content),
+	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* "and" .* y{content[sentence_span][person_span2]} .* "married" .* ]\.
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_husband_between") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles_prep(doc_id, content),
+	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* ("wife" | "husband") .* y{content[sentence_span][person_span2]} .* ]\.
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:far_apart") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles_prep(doc_id, content),
+	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* y{content[sentence_span][person_span2]} .* ]\,
+	x - y > 60.
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:third_person_between") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles_prep(doc_id, content),
+	person_mention(third_person, doc_id, sentence_span, "PERSON")
+	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* z{third_person} .* y{content[sentence_span][person_span2]} .* ]\.
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:familial_between") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles_prep(doc_id, content),
+	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* ("wife" | "husband") .* y{content[sentence_span][person_span2]} .* ]\.
+
+spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, SUM(vote)) <- 
+	spouse_label(doc_id, sentence_span, person_span1, person_span2, vote, rule_id).
+
+
+
+## Declaring prediction variable ##
+
+has_spouse?.
+
+has_spouse(doc_id, sentence_span, person_span1, person_span2) = if l > 0 then TRUE
+                      else if l < 0 then FALSE
+                      else NULL end <- spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, l).
+
+
+
+## Specifying connections between variables ##
+
+has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span2, person_span1) <~
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2).
+
+has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span1, person_span3) <~
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span3).
 
