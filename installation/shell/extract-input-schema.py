@@ -10,9 +10,10 @@ def main():
 	db_schema = {}
 
 	for filename in os.listdir(sys.argv[1]):
-		if filename.endswith('.tsv'):
+		if filename.endswith('.tsv') or filename.endswith('.csv'):
+			delim = "\t" if filename.endswith('.tsv') else ","
 			with open(os.path.join(sys.argv[1], filename)) as infile:
-				reader = csv.reader(infile, delimiter='\t')
+				reader = csv.reader(infile, delimiter=delim)
 
 				table_name = os.path.splitext(filename)[0]
 				db_schema[table_name] = extract_table_schema(next(reader))

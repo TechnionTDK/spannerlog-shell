@@ -28,40 +28,51 @@ spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia
     articles_prep(doc_id, content),
     lower(n1) = lower(content[sentence_span][person_span1]), lower(n2) = lower(content[sentence_span][person_span2]).
 
-spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
-    spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-    spouses_dbpedia(n1, n2),
-    articles_prep(doc_id, content),
-    lower(n2) = lower(content[sentence_span][person_span1]), lower(n1) = lower(content[sentence_span][person_span2]).
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
+#     spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+#     spouses_dbpedia(n1, n2),
+#     articles_prep(doc_id, content),
+#     lower(n2) = lower(content[sentence_span][person_span1]), lower(n1) = lower(content[sentence_span][person_span2]).
 
-spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:married_after") <-
-	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
-	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* "and" .* y{content[sentence_span][person_span2]} .* "married" .* ]\.
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:married_after") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles_prep(doc_id, content),
+# 	<content[sentence_span]>\[.* x{ .* } .* "and" .* y{ .* } .* "married" .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y].
 
-spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_husband_between") <-
-	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
-	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* ("wife" | "husband") .* y{content[sentence_span][person_span2]} .* ]\.
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_husband_between") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles_prep(doc_id, content),
+# 	<content[sentence_span]>\[.* x{ .* } .* ("wife" | "husband") .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y].
+# 
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:far_apart") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles_prep(doc_id, content),
+# 	<content[sentence_span]>\[.* x{ .* } .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y],
+# 	x - y > 60.
+# 
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:third_person_between") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles_prep(doc_id, content),
+# 	person_mention(third_person, doc_id, sentence_span, third_person_span),
+# 	<content[sentence_span]>\[.* x{ .* } .* z{ .* } .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y],
+# 	third_person = content[sentence_span][z].
+# 
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:familial_between") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles_prep(doc_id, content),
+# 	<content[sentence_span]>\[.* x{ .* } .* ("mother" | "father" | "sister" | "brother" | "brother-in-law") .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y].
 
-spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:far_apart") <-
-	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
-	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* y{content[sentence_span][person_span2]} .* ]\,
-	x - y > 60.
-
-spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:third_person_between") <-
-	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
-	person_mention(third_person, doc_id, sentence_span, "PERSON")
-	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* z{third_person} .* y{content[sentence_span][person_span2]} .* ]\.
-
-spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:familial_between") <-
-	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
-	<content[sentence_span]>\[.* x{content[sentence_span][person_span1]} .* ("wife" | "husband") .* y{content[sentence_span][person_span2]} .* ]\.
-
-spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, SUM(vote)) <- 
+spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, SUM(vote)) <-
 	spouse_label(doc_id, sentence_span, person_span1, person_span2, vote, rule_id).
 
 

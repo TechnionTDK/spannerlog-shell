@@ -75,11 +75,9 @@ def create_regex_udf(ief, attrs, target_udf_dir):
 
 
 def compile_rules(rules):
-	for rule_obj in rules:
-		if "weight" in rule_obj:
-			w = rule_obj["weight"] if not None else "?"
-			print("@weight(\""+w+"\")")				
-		print(rule_obj["statement"] + "\n")
+	for rule in rules:
+		for _, stmt in rule.items():		
+			print(stmt + "\n")
 
 
 if __name__ == "__main__":
