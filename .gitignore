@@ -5,3 +5,4 @@ target/
 installation/init.sh
 __pycache__/
 *.pyc
+spouse/rgx-test/.ipynb_checkpoints/married_after-checkpoint.ipynb
