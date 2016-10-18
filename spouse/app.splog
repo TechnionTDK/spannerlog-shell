@@ -1,18 +1,13 @@
 
 
-
 ## Data processing ##
 
-articles_prep(doc_id, content) <- 
-	articles(doc_id, content_raw),
-	preprocess<content_raw>(content).
-
 sentences(content[sentence_span], doc_id, sentence_span) <-
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	ssplit<content>(_, sentence_span).
 
 person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) <-
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	ssplit<content>(_, sentence_span),
 	ner<content[sentence_span]>(ner_span, "PERSON").
 
@@ -29,34 +24,34 @@ spouse_candidate(doc_id, sentence_span, person_span1, person_span2) <-
 spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
 	spouses_dbpedia(n1, n2),
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	n1.equalsIgnoreCase(content[sentence_span][person_span1]),
 	n2.equalsIgnoreCase(content[sentence_span][person_span2]).
 
 spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
 	spouses_dbpedia(n1, n2),
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	n2.equalsIgnoreCase(content[sentence_span][person_span1]),
 	n1.equalsIgnoreCase(content[sentence_span][person_span2]).
 
 spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:married_after") <-
 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	<content[sentence_span]>\[x{.*} \s and \s y{.*} \s married]\,
 	x.contains(person_span1),
 	y.contains(person_span2).
 
 spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_husband_between") <-
 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	<content[sentence_span]>\[x{ .* } \s (wife|husband) \s y{ .* }]\,
 	x.contains(person_span1),
 	y.contains(person_span2).
 
 # spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:far_apart") <-
 # 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-# 	articles_prep(doc_id, content),
+# 	articles(doc_id, content),
 # 	<content[sentence_span]>\[.* x{ .* } .* y{ .* } .* ]\,
 # 	content[sentence_span][person_span1] = content[sentence_span][x],
 # 	content[sentence_span][person_span2] = content[sentence_span][y],
@@ -64,7 +59,7 @@ spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_hus
 # 
 # spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:third_person_between") <-
 # 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-# 	articles_prep(doc_id, content),
+# 	articles(doc_id, content),
 # 	person_mention(third_person, doc_id, sentence_span, third_person_span),
 # 	<content[sentence_span]>\[.* x{ .* } .* z{ .* } .* y{ .* } .* ]\,
 # 	content[sentence_span][person_span1] = content[sentence_span][x],
@@ -73,7 +68,7 @@ spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_hus
 
 spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:familial_between") <-
 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
-	articles_prep(doc_id, content),
+	articles(doc_id, content),
 	<content[sentence_span]>\[x{ .* } \s (mother|father|sister|brother|brother-in-law) \s y{ .* } ]\,
 	x.contains(person_span1),
 	y.contains(person_span2).
