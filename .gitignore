@@ -6,3 +6,6 @@ installation/init.sh
 __pycache__/
 *.pyc
 spouse/rgx-test/.ipynb_checkpoints/married_after-checkpoint.ipynb
+spouse/input/articles.tsv
+spouse/misc/signalmedia-1m.jsonl.gz
+.ipynb_checkpoints/
