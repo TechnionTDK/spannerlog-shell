@@ -2,5 +2,5 @@
 set -eu
 
 cd target
-deepdive do all
+deepdive do all > /dev/null
 cd ..

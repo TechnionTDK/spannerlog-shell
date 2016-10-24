@@ -8,3 +8,6 @@ __pycache__/
 spouse/input/articles.tsv
 spouse/misc/signalmedia-1m.jsonl.gz
 .ipynb_checkpoints/
+spouse/misc/articles/articles_1m_half_processed.tsv
+spouse/misc/articles/articles_original.tsv
+spouse/misc/articles/signalmedia-1m.jsonl.gz
