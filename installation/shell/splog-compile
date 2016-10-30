@@ -12,24 +12,23 @@ mkdir target/udf
 
 schema=()
 ln -s "../db.url" "target/db.url"
-if [[ -d input ]]; then
-	ln -s "../input" "target/input"
-	(extract-input-schema.py input) > target/edb.schema.json
+if [[ -d edb ]]; then
+	ln -s "../edb" "target/input"
+	(extract-edb-schema.py edb) > target/edb.schema.json
 	schema+=(-edb target/edb.schema.json)
 fi
-if [[ -d udf ]]; then
-	(compile-udf-dir.py udf target/udf) > target/udf.schema.json
-	schema+=(-udf target/udf.schema.json)
+if [[ -d ief ]]; then
+	(extract-ief-schema.py ief) > target/ief.schema.json
+	schema+=(-ief target/ief.schema.json)
 fi
 
 # compile spannerlog program
 cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]:-}"
 ($cmd 2>&1>&3 | print-error) 3> target/splog.json
 
-(compile-to-ddlog.py target/splog.json target/udf) > target/app.ddlog
+# (compile-to-ddlog.py target/splog.json target/udf) > target/app.ddlog
 
-cd target
-chmod -R 777 .* 
-deepdive compile
-cd ..
-
+# cd target
+# chmod -R 777 .* 
+# deepdive compile
+# cd ..
