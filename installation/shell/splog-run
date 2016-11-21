@@ -2,5 +2,12 @@
 set -eu
 
 cd target
-deepdive do all > /dev/null
+
+
+# deepdive do all > /dev/null
+
+deepdive db init
+deepdive do process/init/app
+
+
 cd ..

@@ -1,0 +1,36 @@
+CREATE FUNCTION ssplit (s text)
+  RETURNS SETOF integer[]
+AS $$
+from pycorenlp import StanfordCoreNLP
+nlp = StanfordCoreNLP('http://localhost:9000')
+succ = False
+while succ == False:
+    try:
+        res = nlp.annotate(s, properties={
+            'annotators': 'ssplit',
+            'outputFormat': 'json'
+        }) 
+        succ = True 
+    except:
+        pass
+
+if res and isinstance(res, dict) and "sentences" in res:
+    for sen in res["sentences"]:
+        yield [
+            sen["tokens"][0]["characterOffsetBegin"] + 1,
+            sen["tokens"][-1]["characterOffsetEnd"] + 1
+        ]
+$$ LANGUAGE plpythonu;
+
+deepdive db init
+deepdive do process/init/app
+deepdive do process/init/relation/articles
+deepdive do data/articles
+deepdive create table "sentences"
+deepdive execute 'INSERT INTO sentences SELECT substr(R0.column2, R1[1], R1[2] - R1[1]) AS column_0, R0.column1 AS "articles.R0.column1", R1[1] AS "ssplit.R1.sentence_span_start", R1[2] AS "ssplit.R1.sentence_span_end" FROM articles R0, ssplit(R0.column2) as R1'
+
+
+
+INSERT INTO sentences 
+    SELECT DISTINCT substr(R0.column2, R1[1], R1[2] - R1[1]) AS column_0, R0.column1 AS "articles.R0.column1", R1[1] AS "ssplit.R1.sentence_span_start", R1[2] AS "ssplit.R1.sentence_span_end"
+    FROM articles R0, ssplit("R1.content") as R1
