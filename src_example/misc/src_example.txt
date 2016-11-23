@@ -59,12 +59,18 @@ if match:
 
 $$ LANGUAGE plpythonu;
 
-INSERT INTO married 
-    SELECT A.id, R.x_start, R.x_end, R.y_start, R.y_end
-    FROM articles A,
-      rgx(A.content) as R,
-      ner(A.content) as N
-    WHERE N.category = 'PERSON'
+
+SELECT A.id, R.x_start, R.x_end, R.y_start, R.y_end
+FROM articles A,
+    rgx(A.content) as R,
+    ner(A.content) as N1,
+    ner(A.content) as N2
+WHERE R.x_start = N1.start
+    AND R.x_end = N1.end
+    AND N1.category = 'PERSON'
+    AND R.y_start = N2.start
+    AND R.y_end = N2.end
+    AND N2.category = 'PERSON'
 
 
 # To be modified:
