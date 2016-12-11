@@ -1,23 +1,37 @@
 #!/usr/bin/env python3
 
+## Compiles a splog.json file (output by spannerlog.jar) to a app.ddlog file.
+
+
 import os
 import json
 import sys
 from collections import OrderedDict
 
-def main():
 
+def main():
 	with open(sys.argv[1]) as conf_file:
 		conf = json.load(conf_file, object_pairs_hook=OrderedDict)
 
-		compile_schema(conf["schema"])		
+		compile_db_schema(conf["schema"])		
 		compile_ie_functions(conf["ie_functions"], conf["schema"], sys.argv[2])
 		compile_rules(conf["rules"])
 
 
-def compile_schema(schema):
-	for rel_schema in schema:
-		predVar = "?" if "predict_var" in rel_schema else ""
+def compile_db_schema(schema):
+	if "edb" in schema:
+		compile_sub_schema(schema["edb"])
+
+	if "idb" in schema:
+		compile_sub_schema(schema["idb"])
+
+	# if "ief" in schema:
+	# 	compile_sub_schema(schema["ief"])
+
+
+def compile_sub_schema(sub_schame):
+	for rel_schema in sub_schame:
+		predVar = "?" if "variable_type" in rel_schema else ""
 		print(rel_schema["name"] + predVar + " (")
 		attrs = []
 		for attr_name, attr_type in rel_schema["attributes"].items():
@@ -32,18 +46,19 @@ def compile_schema(schema):
 
 
 def compile_ie_functions(ie_functions, schema, target_udf_dir):
-	for ief in ie_functions:
-		name = ief["name"]
+	pass # TODO implement
+	# for ief in ie_functions:
+	# 	name = ief["name"]
 
-		print("function " + name + " over (s text)\n\t" + \
-			  "returns rows like " + name + "\n\t" + \
-			  "implementation \"udf/" + name + ".py\" handles tsv lines.\n\n" + \
-			  ief["statement"] + "\n")
+	# 	print("function " + name + " over (s text)\n\t" + \
+	# 		  "returns rows like " + name + "\n\t" + \
+	# 		  "implementation \"udf/" + name + ".py\" handles tsv lines.\n\n" + \
+	# 		  ief["statement"] + "\n")
 
-		if "regex" in ief:
-			create_regex_udf(ief, 
-				[rel_schema["attributes"] for rel_schema in schema if rel_schema["name"] == name][0],
-				target_udf_dir)
+	# 	if "regex" in ief:
+	# 		create_regex_udf(ief, 
+	# 			[rel_schema["attributes"] for rel_schema in schema if rel_schema["name"] == name][0],
+	# 			target_udf_dir)
 
 
 def create_regex_udf(ief, attrs, target_udf_dir):
@@ -76,8 +91,11 @@ def create_regex_udf(ief, attrs, target_udf_dir):
 
 def compile_rules(rules):
 	for rule in rules:
-		for _, stmt in rule.items():		
-			print(stmt + "\n")
+		if rule["format"] == "ddlog":
+			print(rule["statement"])
+		# for _, stmt in rule.items():		
+		# 	print(stmt + "\n")
+	print("married(v1, v2, v3, v4, v5) :- married(v1, v2, v3, v4, v5), 0 > 1.")
 
 
 if __name__ == "__main__":
