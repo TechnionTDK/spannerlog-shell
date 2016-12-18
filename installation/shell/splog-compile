@@ -26,13 +26,21 @@ fi
 cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${schema[*]:-}"
 ($cmd 2>&1>&3 | print-error) 3> target/splog.json
 
-(create-sql-script target/splog.json) > target/script.sql
-
-(compile-to-ddlog.py target/splog.json target/udf) > target/app.ddlog
+(compile-to-ddlog.py target/splog.json) > target/app.ddlog
+(compile-rgx.py target/splog.json) > target/rgx.sql
 
 cd target
 chmod -R 777 .* 
 deepdive compile
 deepdive db init
 deepdive do process/init/app > /dev/null
+
+# add procedural code to postgres
+url=$(eval echo "$(cat db.url)")
+db=${url##*/}
+psql -d $db -c "CREATE EXTENSION plpythonu"
+psql -d $db -f ../../installation/lib/ner.sql # Always?
+
+# (create-sql-script target/splog.json) > target/script.sql
+
 cd ..

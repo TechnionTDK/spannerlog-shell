@@ -14,7 +14,7 @@ def main():
 		conf = json.load(conf_file, object_pairs_hook=OrderedDict)
 
 		compile_db_schema(conf["schema"])		
-		compile_ie_functions(conf["ie_functions"], conf["schema"], sys.argv[2])
+		# compile_ie_functions(conf["ie_functions"], conf["schema"], sys.argv[2])
 		compile_rules(conf["rules"])
 
 
