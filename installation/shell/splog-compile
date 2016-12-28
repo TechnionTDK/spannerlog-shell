@@ -39,7 +39,12 @@ deepdive do process/init/app > /dev/null
 url=$(eval echo "$(cat db.url)")
 db=${url##*/}
 psql -d $db -c "CREATE EXTENSION plpythonu"
+echo "Importing built-in IEFs"
 psql -d $db -f ../../installation/lib/ner.sql # Always?
+if [[ -e rgx.sql ]]; then
+	echo "Importing auto-generated regex formulas"
+    psql -d $db -f rgx.sql
+fi
 
 # (create-sql-script target/splog.json) > target/script.sql
 

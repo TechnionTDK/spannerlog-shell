@@ -8,6 +8,7 @@ cd target
 
 deepdive db init
 deepdive do process/init/app
-
+deepdive do process/init/relation/articles
+deepdive do data/articles
 
 cd ..
