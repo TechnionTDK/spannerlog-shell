@@ -1,5 +1,5 @@
 married(id, x, y) <-
 	articles(id, c),
-	<c>\[.* x{ [A-Z][a-z]*(\s[A-Z][a-z]*)* } .* \s married \s .* y{ [A-Z][a-z]*(\s[A-Z][a-z]*)* } .* ]\,
+	<c>\[x{ [A-Z][a-z]*(\s[A-Z][a-z]*)* } \s married \s y{ [A-Z][a-z]*(\s[A-Z][a-z]*)*}]\,
 	ner<c>(x, "PERSON"),
     ner<c>(y, "PERSON").

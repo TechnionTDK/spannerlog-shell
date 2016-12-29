@@ -27,7 +27,8 @@ cmd="java -jar $SPLOG_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.splog ${sche
 ($cmd 2>&1>&3 | print-error) 3> target/splog.json
 
 (compile-to-ddlog.py target/splog.json) > target/app.ddlog
-(compile-rgx.py target/splog.json) > target/rgx.sql
+(compile-rgx-to-sql.py target/splog.json) > target/rgx.sql
+(compile-exec-plan-to-bash.py target/splog.json) > target/run.sh
 
 cd target
 chmod -R 777 .* 
@@ -45,7 +46,5 @@ if [[ -e rgx.sql ]]; then
 	echo "Importing auto-generated regex formulas"
     psql -d $db -f rgx.sql
 fi
-
-# (create-sql-script target/splog.json) > target/script.sql
 
 cd ..

@@ -1,5 +1,5 @@
 CREATE FUNCTION ner (s text)
-    RETURNS TABLE (start int, "end" int, category text)
+    RETURNS TABLE (entity_start int, entity_end int, category text)
 AS $$
 from pycorenlp import StanfordCoreNLP
 nlp = StanfordCoreNLP('http://localhost:9000')
