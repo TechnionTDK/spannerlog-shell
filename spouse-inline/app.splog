@@ -1,13 +1,8 @@
 
-
-## Data processing ##
-
-sentences(content[sentence_span], doc_id, sentence_span) <-
+sentences(doc_id, sentence, content[sentence]) <-
 	articles(doc_id, content),
-	ssplit<content>(_, sentence_span).
+	ssplit<content>(_, sentence).
 
-person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) <-
-	articles(doc_id, content),
-	ssplit<content>(_, sentence_span),
-	ner<content[sentence_span]>(ner_span, "PERSON").
-
+person_mention(doc_id, sentence, entity) <-
+	sentences(doc_id, sentence, content),
+	ner<content>(entity, "PERSON").

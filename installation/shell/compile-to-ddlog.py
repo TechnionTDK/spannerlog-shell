@@ -107,7 +107,7 @@ def compile_rules(isch, rules):
     for sch in isch:
         if sch["name"] not in printed:
             attrs = [ "v" + str(i) for i in range(len(get_attribute_list(sch)))]
-            atom_str = name + "(" + ", ".join(attrs) + ")"
+            atom_str = sch["name"] + "(" + ", ".join(attrs) + ")"
             print(atom_str + " :- " + atom_str + ", 0 > 1.")
 
 

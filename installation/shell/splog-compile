@@ -43,7 +43,8 @@ url=$(eval echo "$(cat db.url)")
 db=${url##*/}
 psql -d $db -c "CREATE EXTENSION plpythonu"
 echo "Importing built-in IEFs"
-psql -d $db -f ../../installation/lib/ner.sql # always?
+psql -d $db -f ../../installation/lib/ner.sql 		# always?
+psql -d $db -f ../../installation/lib/ssplit.sql
 if [[ -e rgx.sql ]]; then
 	echo "Importing auto-generated regex formulas"
     psql -d $db -f rgx.sql
