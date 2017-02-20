@@ -25,3 +25,6 @@ spouse_label(doc_id, sentence, entity1, name1, entity2, name2, -1, "neg:familial
 	<content[sentence]>\[x{ .* } \s (mother|father|sister|brother) \s y{ .* } ]\,
 	x.contains(entity1),
 	y.contains(entity2).
+
+spouse_label_resolved(name1, name2, SUM(vote)) <-
+	spouse_label(_, _, _, name1, _, name2, vote, _).
