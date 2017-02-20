@@ -46,7 +46,7 @@ def compile_sub_schema(sub_schame):
         print(rel_schema["name"] + predVar + " (")
         attrs = get_attribute_list(rel_schema)
 
-        attr_strings = ['{0:<12} {1:<}'.format(attr_name, attr_type) for attr_name, attr_type in attrs]
+        attr_strings = ['{0:<18} {1:<}'.format(attr_name, attr_type) for attr_name, attr_type in attrs]
         print("\t" + ",\n\t".join(attr_strings) + "\n).\n")
 
 
@@ -106,9 +106,23 @@ def compile_rules(isch, rules):
     # Creating a dummy rule for each i-schema without a ddlog-compiled rule.
     for sch in isch:
         if sch["name"] not in printed:
-            attrs = [ "v" + str(i) for i in range(len(get_attribute_list(sch)))]
+            # attrs = [ "v" + str(i) for i in range(len(get_attribute_list(sch)))]
+            # atom_str = sch["name"] + "(" + ", ".join(attrs) + ")"
+            # print(atom_str + " :- " + atom_str + ", 0 > 1.")
+
+            attrs = []
+            for attr_name, attr_type in get_attribute_list(sch):
+                if attr_type == "int":
+                    attrs.append("0")
+                elif attr_type == "text":
+                    attrs.append("\"\"")
+                elif attr_type == "span":
+                    attrs.append("0")
+                    attrs.append("1")
             atom_str = sch["name"] + "(" + ", ".join(attrs) + ")"
-            print(atom_str + " :- " + atom_str + ", 0 > 1.")
+            print(atom_str + " :- anchor(_), [0 > 1].")
+            # print(atom_str + " :- 0 > 1.")
+            # print(atom_str + " :- articles(x,y).")
 
 
 if __name__ == "__main__":

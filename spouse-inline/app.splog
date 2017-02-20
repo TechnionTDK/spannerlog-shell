@@ -3,6 +3,10 @@ sentences(doc_id, sentence, content[sentence]) <-
 	articles(doc_id, content),
 	ssplit<content>(_, sentence).
 
-person_mention(doc_id, sentence, entity) <-
+person_mention(doc_id, sentence, entity, content[entity]) <-
 	sentences(doc_id, sentence, content),
 	ner<content>(entity, "PERSON").
+
+persons(doc_id, sentence, entity, content[sentence][entity]) <-
+	articles(doc_id, content),
+	person_mention(doc_id, sentence, entity, _).
