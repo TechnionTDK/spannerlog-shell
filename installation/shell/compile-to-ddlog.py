@@ -98,10 +98,11 @@ def compile_rules(isch, rules):
 
     # Printing each ddlog-compiled rule
     printed = []
-    for name, rule in rules.items():
-        if rule["target"] == "ddlog":
-            print(rule["cmd"])
-            printed.append(name)
+    for name, steps in rules.items():
+        for step in steps:
+            if step["target"] == "ddlog":
+                print(step["cmd"] + "\n")
+                printed.append(name)            
 
     # Creating a dummy rule for each i-schema without a ddlog-compiled rule.
     for sch in isch:
@@ -120,7 +121,7 @@ def compile_rules(isch, rules):
                     attrs.append("0")
                     attrs.append("1")
             atom_str = sch["name"] + "(" + ", ".join(attrs) + ")"
-            print(atom_str + " :- anchor(_), [0 > 1].")
+            print(atom_str + " :- anchor(_), [0 > 1].\n")
             # print(atom_str + " :- 0 > 1.")
             # print(atom_str + " :- articles(x,y).")
 

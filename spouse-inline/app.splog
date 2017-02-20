@@ -12,3 +12,16 @@ spouse_candidate(doc_id, sentence, entity1, name1, entity2, name2) <-
 	person_mention(doc_id, sentence, entity2, name2),
 	name1 != name2,
 	entity1 != entity2.
+
+spouse_label(doc_id, sentence, entity1, name1, entity2, name2, 1, "from_dbpedia") <-
+	spouse_candidate(doc_id, sentence, entity1, name1, entity2, name2),
+	spouses_dbpedia(s1, s2),
+	s1.equalsIgnoreCase(name1),
+	s2.equalsIgnoreCase(name2).
+
+spouse_label(doc_id, sentence, entity1, name1, entity2, name2, -1, "neg:familial_between") <-
+	spouse_candidate(doc_id, sentence, entity1, name1, entity2, name2),
+	articles(doc_id, content),
+	<content[sentence]>\[x{ .* } \s (mother|father|sister|brother) \s y{ .* } ]\,
+	x.contains(entity1),
+	y.contains(entity2).

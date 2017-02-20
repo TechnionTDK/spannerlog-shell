@@ -6,7 +6,7 @@ import os
 import json
 import sys
 from collections import OrderedDict
-
+import re
 
 def main():
     print("#!/usr/bin/env bash\n")
@@ -20,13 +20,24 @@ def main():
 
         print("deepdive do all > /dev/null")
 
-        for name, rule in conf["execution"]["idb"].items():
-            if rule["target"] == "sql":
-                print("deepdive db create-table-as " + name + " \"" + rule["cmd"] + "\"")
-            elif rule["target"] == "ddlog":
+        for name, steps in conf["execution"]["idb"].items():
+            sql_steps = []
+            ddlog_steps_exist = None
+            for step in steps:
+                if step["target"] == "sql":
+                    sql_steps.append(re.sub(r"\"(.*?)\"", r"'\1'::text", step["cmd"]))
+                if step["target"] == "ddlog":
+                    ddlog_steps_exist = True
+
+            if ddlog_steps_exist:
                 print("deepdive redo process/ext_" + name + " > /dev/null")
                 print("deepdive redo data/" + name + " > /dev/null")
+                print()
                 # print("deepdive do " + name + " > /dev/null")
+                if sql_steps:
+                    print("deepdive sql \"INSERT INTO " + name + " " + "\nUNION ALL\n".join(sql_steps) + "\"\n")
+            elif sql_steps:
+                print("deepdive db create-table-as " + name + " \"" + "\nUNION ALL\n".join(sql_steps) + "\"\n")
 
 
 if __name__ == "__main__":
