@@ -7,6 +7,8 @@ person_mention(doc_id, sentence, entity, content[entity]) <-
 	sentences(doc_id, sentence, content),
 	ner<content>(entity, "PERSON").
 
-persons(doc_id, sentence, entity, content[sentence][entity]) <-
-	articles(doc_id, content),
-	person_mention(doc_id, sentence, entity, _).
+spouse_candidate(doc_id, sentence, entity1, name1, entity2, name2) <-
+	person_mention(doc_id, sentence, entity1, name1),
+	person_mention(doc_id, sentence, entity2, name2),
+	name1 != name2,
+	entity1 != entity2.
