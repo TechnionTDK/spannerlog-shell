@@ -1,0 +1,86 @@
+<html>
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" type="text/css" href="spannerlog.css"/>
+  	<script type="text/javascript" src="spannerlog.js"></script>
+
+</head>
+<body>
+<div id="wrap">
+<!-- A header bar -->
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://tdk.net.technion.ac.il/">TDK Spannerlog</a>
+    </div>
+  </div>
+</nav>
+
+<!-- The main content of the page -->
+<div class="container">
+  <div class="row">
+
+    <!-- Program area input -->
+    <form id="form_execute" accept-charset="UTF-8" onsubmit="return false;">
+
+    <div class="col-sm-12" style="margin-bottom: 15px;">
+      <label for="edb" class="label">&mdash; EDB &mdash;</label>
+      <input class="form-control" type="file" id="edb" accept=".csv" multiple>
+    </div>
+
+    <div class="col-sm-2" style="margin-bottom: 15px;">
+        <label for="language" class="label">&mdash; Language (data) &mdash;</label>
+        <select id="language" data-placeholder="Language"
+                class="chosen-select" title="Language">
+            <option value="en"        selected > English   </option>
+            <option value="iw"                 > Hebrew    </option>
+        </select>
+    </div>
+
+
+    <div class="col-sm-12" style="margin-bottom: 5px;">
+      <label for="text" class="label">&mdash; Program &mdash;</label>
+      <textarea class="form-control" rows="2" id="text" placeholder="e.g., Q(s[x]) :- Articles(s), NER<s>(x, &#34;ORG&#34;)." autofocus></textarea>
+    </div>
+
+    
+
+    <!-- Submit button -->
+    <div class="col-sm-2" style="text-align: center; margin-top: 7px; ">
+        <button id="submit" class="btn btn-block">Submit</button>
+    </div>
+    </form>
+
+  </div>
+  <div class="row">
+    <!-- A panel for errors to show up in -->
+    <div id="errors" class="row">
+    </div>
+
+    <!-- Loading gif -->
+    <div id="loading" class="row" style="display:none">
+      <img src="//storage.googleapis.com/corenlp/loading.gif" height="100px" style="margin-left: 100px"/>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- The footer of the page -->
+<footer id="footer" class="footer">
+  <div class="container">
+    <p class="text-muted">
+    </p>
+  </div>
+</footer>
+</body>
+</html>
