@@ -11,3 +11,4 @@ spouse/misc/signalmedia-1m.jsonl.gz
 spouse/misc/articles/articles_1m_half_processed.tsv
 spouse/misc/articles/articles_original.tsv
 spouse/misc/articles/signalmedia-1m.jsonl.gz
+/webservice/runserver.cmd
