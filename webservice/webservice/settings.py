@@ -25,7 +25,7 @@ SECRET_KEY = '1)4!2!@xp!vb_$9q7agf*!(f-#+c7(e1ko)+p-&7n-ipt4mf*='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yoavn-vm.cs.technion.ac.il', 'localhost', '127.0.0.1']
 
 
 # Application definition
