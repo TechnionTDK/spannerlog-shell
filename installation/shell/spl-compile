@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-if [[ ! -e app.splog || ! -e db.url ]]; then
+if [[ ! -e app.spl || ! -e db.url ]]; then
     error "Not inside a Spannerlog application: app.splog and db.url should be all present in a parent directory"
 fi
 
