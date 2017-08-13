@@ -8,7 +8,7 @@ class Wrapper(object):
 
     def __init__(self):
         self.app = "myapp"
-        self.working_dir = os.path.abspath("spannerlog/temp/" + self.app + "/")
+        self.working_dir = os.path.abspath("spannerlog/temp/")
         self.db = self.app + "_db"
 
         self.init_app()
