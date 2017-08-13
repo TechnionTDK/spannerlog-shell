@@ -24,6 +24,7 @@ def run(request):
 
         data = wrapper.run()
     except WrapperException as e:
+        print(str(e))
         return HttpResponse(str(e), status=500)
   
     return HttpResponse(data, content_type='application/json')
