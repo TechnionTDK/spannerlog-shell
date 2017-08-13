@@ -28,6 +28,9 @@ class Wrapper(object):
                 print("Out:")
                 print(out)
         except subprocess.CalledProcessError as e:
+            print(str(e))
+            print(str(e.output))
+            print(e.output)
             raise WrapperException(e.output)
 
 
