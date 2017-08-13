@@ -30,6 +30,7 @@ class Wrapper(object):
                 print("Out:")
                 print(out)
         except subprocess.CalledProcessError as e:
+            print(out)
             print(str(e))
             print(str(e.output))
             print(e.output)
