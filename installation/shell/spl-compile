@@ -26,8 +26,9 @@ fi
 
 # compile spannerlog program
 cmd="java -jar $SPL_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.spl ${schema[*]:-}"
+echo "1"
 ($cmd 2>&1>&3 | print-error) 3> target/spl.json
-
+echo "2"
 (compile-to-ddlog.py target/spl.json target/udf) > target/app.ddlog
 
 cd target
