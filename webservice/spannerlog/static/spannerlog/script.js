@@ -64,7 +64,7 @@ $(document).ready(function() {
     // Get the program to run    
     currentQuery = $('#text').val();
     if (currentQuery.trim() == '') {
-      currentQuery = 'Q(s[x]) <- Articles(s), NER<s>(x, "ORG").';
+      currentQuery = 'Q(s[x]) <- Articles(s,_,_,_,_,_), NER<s>(x, "ORG").';
       $('#text').val(currentQuery);
     }
   });

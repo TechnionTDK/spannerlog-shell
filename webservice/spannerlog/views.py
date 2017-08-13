@@ -30,7 +30,8 @@ def run(request):
         data = wrapper.run()
         print(bcolors.ENDC)
     except WrapperException as e:
-        print(bcolors.FAIL + "WrapperException occured!" + bcolors.ENDC)
+        print(bcolors.FAIL)
+        print("WrapperException occured!" + bcolors.ENDC)
         print(str(e))
 
         ansi_escape = re.compile(r'\x1b[^m]*m')
