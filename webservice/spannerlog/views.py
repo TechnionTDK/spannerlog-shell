@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from .wrapper import Wrapper
+from .wrapper import Wrapper, WrapperException
 
 
 def index(request):
@@ -13,15 +13,17 @@ def index(request):
 @csrf_exempt
 def run(request):
 
-    wrapper = Wrapper()
+	try:
+	    wrapper = Wrapper()
 
-    files = request.FILES.getlist('edb')
-    for f in files:
-        wrapper.add_input_file(f)
-    
-    wrapper.write_program(request.POST['program'])
+	    files = request.FILES.getlist('edb')
+	    for f in files:
+	        wrapper.add_input_file(f)
+	    
+	    wrapper.write_program(request.POST['program'])
 
-    data = wrapper.run()
-
+	    data = wrapper.run()
+	except WrapperException as e:
+		return HttpResponse(str(e), status=500)
   
     return HttpResponse(data, content_type='application/json')

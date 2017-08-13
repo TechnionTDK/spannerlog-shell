@@ -18,15 +18,17 @@ class Wrapper(object):
     def run(self):
         print("running %s..." % (self.app,))
 
+        try:
+            if platform.system() == "Linux":
+                out = subprocess.check_output("""
+                    cd %s; 
+                    spl compile
+                    """ % (self.working_dir, ), shell=True)
 
-        if platform.system() == "Linux":
-            out = subprocess.check_output("""
-                cd %s; 
-                spl compile
-                """ % (self.working_dir, ), shell=True)
-
-            print("Out:")
-            print(out)
+                print("Out:")
+                print(out)
+        except subprocess.CalledProcessError as e:
+            raise WrapperException(e.output)
 
 
         data = json.dumps({
@@ -68,3 +70,6 @@ class Wrapper(object):
             with open(self.working_dir + "app.spl", 'w') as f:
                 f.write("")
 
+
+class WrapperException(Exception):
+    pass
