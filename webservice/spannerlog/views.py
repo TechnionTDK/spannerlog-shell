@@ -17,7 +17,7 @@ def index(request):
 def run(request):
 
     print("processing incoming request...")
-    pprint(vars(request.POST))
+    pprint(request.POST)
 
     try:
         wrapper = Wrapper()
