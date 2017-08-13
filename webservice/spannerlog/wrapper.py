@@ -51,7 +51,7 @@ class Wrapper(object):
 
 
     def add_input_file(self, file):
-        path = self.working_dir + "input/" + file.name
+        path = self.working_dir + "edb/" + file.name
         if not os.path.exists(path):
             with open(path, 'wb+') as destination:
                 for chunk in file.chunks():
@@ -62,13 +62,13 @@ class Wrapper(object):
     def init_app(self):
         if not os.path.exists(self.working_dir):
             os.makedirs(self.working_dir)
-        
+
         """creates an empty spannerlog app"""
         if not os.path.exists(self.working_dir):
             os.makedirs(self.working_dir)
 
-        if not os.path.exists(self.working_dir + "input"):
-            os.makedirs(self.working_dir + "input")
+        if not os.path.exists(self.working_dir + "edb"):
+            os.makedirs(self.working_dir + "edb")
 
         if not os.path.exists(self.working_dir + "db.url"):
             with open(self.working_dir + "db.url", 'w') as f:
