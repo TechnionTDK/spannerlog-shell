@@ -8,17 +8,22 @@ from .wrapper import Wrapper, WrapperException, bcolors
 
 import re
 
+from pprint import pprint
+
 def index(request):
     return render(request, 'spannerlog/index.html', {})
 
 @csrf_exempt
 def run(request):
 
+    print("processing incoming request...")
+    pprint(vars(request))
+
     try:
         wrapper = Wrapper()
-
         files = request.FILES.getlist('edb')
         for f in files:
+
             wrapper.add_input_file(f)
         
         wrapper.write_program(request.POST['program'])
