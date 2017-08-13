@@ -15,11 +15,9 @@ def index(request):
 
 @csrf_exempt
 def run(request):
-    print(bcolors.OKBLUE)
-    print("processing incoming request...")
+    print(bcolors.OKBLUE + "processing incoming request...")
     pprint(request.POST)
-    print(bcolors.ENDC)
-    
+
     try:
         wrapper = Wrapper()
         files = request.FILES.getlist('edb')
@@ -30,6 +28,7 @@ def run(request):
         wrapper.write_program(request.POST['program'])
 
         data = wrapper.run()
+        print(bcolors.ENDC)
     except WrapperException as e:
         print(bcolors.FAIL + "WrapperException occured!" + bcolors.ENDC)
         print(str(e))
