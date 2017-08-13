@@ -6,7 +6,7 @@ if [ $# -gt 0 ]; then
 	echo "$1" >&2	
 else
 	# sed $'s,.*,\e[31m&\e[m,'>&2
-	echo
+	echo 
 fi
 tput sgr0
 
