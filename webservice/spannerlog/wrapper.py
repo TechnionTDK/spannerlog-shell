@@ -20,12 +20,10 @@ class Wrapper(object):
 
         try:
             if platform.system() == "Linux":
-                df = subprocess.Popen("cd %s; spl compile" % (self.working_dir,), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                cmd = "cd %s; spl compile" % (self.working_dir,)
+
+                df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
                 out, err = df.communicate()
-                # out = subprocess.check_output("""
-                #     cd %s; 
-                #     spl compile
-                #     """ % (self.working_dir, ), shell=True)
 
                 if err:
                     raise WrapperException(err.decode('utf-8'))
