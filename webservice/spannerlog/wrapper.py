@@ -8,7 +8,7 @@ class Wrapper(object):
 
     def __init__(self):
         self.app = "myapp"
-        self.working_dir = os.path.abspath("spannerlog/temp/" + self.app + "/")
+        self.working_dir = "spannerlog/temp/" + self.app + "/"
         self.db = self.app + "_db"
 
         self.init_app()
@@ -60,6 +60,9 @@ class Wrapper(object):
 
 
     def init_app(self):
+        if not os.path.exists(self.working_dir):
+            os.makedirs(self.working_dir)
+        
         """creates an empty spannerlog app"""
         if not os.path.exists(self.working_dir):
             os.makedirs(self.working_dir)
