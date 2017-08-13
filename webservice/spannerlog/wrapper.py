@@ -18,8 +18,8 @@ class Wrapper(object):
         print("running %s..." % (self.app,))
 
 
-        print(platform.system())
-        # subprocess.call(["ls", "-l"])
+        if platform.system() == "Linux":
+            subprocess.call(["ls", "-l"])
 
 
         data = json.dumps({
