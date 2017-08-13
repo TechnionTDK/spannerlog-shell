@@ -18,7 +18,7 @@ print_help() {
 cmd=$1; shift
 
 export SPL_HOME=$(dirname "$(dirname -- $0)")
-export PATH="$SPL_HOME/bin:$SPLOG_HOME/shell:$PATH"
+export PATH="$SPL_HOME/bin:$SPL_HOME/shell:$PATH"
 
 # Check if command is valid
 exe=spl-"$cmd"
