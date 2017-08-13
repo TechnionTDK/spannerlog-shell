@@ -2,9 +2,6 @@
 
 ## Data processing ##
 
-sentences(content[sentence_span], doc_id, sentence_span) <-
-	articles(doc_id, content),
-	ssplit<content>(_, sentence_span).
 
 person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) <-
 	articles(doc_id, content),
@@ -83,18 +80,18 @@ spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, SUM(vot
 
 has_spouse?.
 
-has_spouse(doc_id, sentence_span, person_span1, person_span2) = if l > 0 then TRUE
-                      else if l < 0 then FALSE
-                      else NULL end <- spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, l).
+has_spouse(doc_id, sentence_span, person_span1, person_span2) = {
+		POS: votes > 0 ;
+		NEG: votes < 0
+	} <- spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, votes).
 
 
 
 ## Specifying connections between variables ##
 
-has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span2, person_span1) <~
+_ * [ has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span2, person_span1) ] <-
     spouse_candidate(doc_id, sentence_span, person_span1, person_span2).
 
-has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span1, person_span3) <~
+_ * [ has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span1, person_span3) ] <-
     spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
     spouse_candidate(doc_id, sentence_span, person_span1, person_span3).
-

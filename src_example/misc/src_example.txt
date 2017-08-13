@@ -1,0 +1,104 @@
+CREATE EXTENSION plpythonu;
+
+CREATE FUNCTION ner (s text)
+    RETURNS TABLE (start int, "end" int, category text)
+AS $$
+from pycorenlp import StanfordCoreNLP
+nlp = StanfordCoreNLP('http://localhost:9000')
+res = nlp.annotate(s, properties={
+    'annotators': 'ner',
+    'outputFormat': 'json'
+})  
+
+if not isinstance(res, dict):
+    return
+
+for sen in res["sentences"]:
+    begin = -1
+    end = -1
+    ner_prev = "O"
+    for token in sen["tokens"]:
+        ner_curr = str(token["ner"])
+        if ner_curr == ner_prev:
+            end = token["characterOffsetEnd"]
+        else:
+            if begin == -1 :
+                begin = token["characterOffsetBegin"]
+                end = token["characterOffsetEnd"]
+                ner_prev = ner_curr
+            else:
+                yield [begin + 1, end + 1, ner_prev]
+                if ner_curr != "O":
+                    begin = token["characterOffsetBegin"]
+                    end = token["characterOffsetEnd"]
+                    ner_prev = ner_curr
+                else:
+                    begin = -1
+                    end = -1
+                    ner_prev = "O"
+    if begin != -1:
+        yield [begin + 1, end + 1, ner_prev]
+
+$$ LANGUAGE plpythonu;
+
+CREATE FUNCTION rgx (s text)
+    RETURNS TABLE (x_start int, x_end int, y_start int, y_end int)
+AS $$
+
+import re
+
+pattern = re.compile(r"(?P<x>[A-Z][a-z]*( [A-Z][a-z]*)*) married (?P<y>[A-Z][a-z]*( [A-Z][a-z]*)*)")
+match = pattern.match(s)
+if match:
+    yield [
+        match.start('x') + 1,
+        match.end('x') + 1,
+        match.start('y') + 1,
+        match.end('y') + 1,
+    ]
+
+$$ LANGUAGE plpythonu;
+
+
+SELECT A.id, R.x_start, R.x_end, R.y_start, R.y_end
+FROM articles A,
+    rgx(A.content) as R,
+    ner(A.content) as N1,
+    ner(A.content) as N2
+WHERE R.x_start = N1.start
+    AND R.x_end = N1.end
+    AND N1.category = 'PERSON'
+    AND R.y_start = N2.start
+    AND R.y_end = N2.end
+    AND N2.category = 'PERSON'
+
+SELECT A.column1, R.x_start, R.x_end, R.y_start, R.y_end
+FROM articles A,
+    rgx1(A.column2) as R,
+    ner(A.column2) as N1,
+    ner(A.column2) as N2
+WHERE R.x_start = N1.entity_start
+    AND R.x_end = N1.entity_end
+    AND N1.category = 'PERSON'
+    AND R.y_start = N2.entity_start
+    AND R.y_end = N2.entity_end
+    AND N2.category = 'PERSON'
+
+(?P<x>[A-Z][a-z]*( [A-Z][a-z]*)*) married (?P<y>[A-Z][a-z]*( [A-Z][a-z]*)*)
+
+Barack Obama married Michelle Obama in 1969
+Barack married Michelle in October 1992 after a couple dates and business meetings
+
+
+
+
+# To be modified:
+deepdive db init
+deepdive do process/init/app
+deepdive do process/init/relation/articles
+deepdive do data/articles
+deepdive create table "sentences"
+deepdive execute 'INSERT INTO sentences SELECT substr(R0.column2, R1[1], R1[2] - R1[1]) AS column_0, R0.column1 AS "articles.R0.column1", R1[1] AS "ssplit.R1.sentence_span_start", R1[2] AS "ssplit.R1.sentence_span_end" FROM articles R0, ssplit(R0.column2) as R1'
+
+
+

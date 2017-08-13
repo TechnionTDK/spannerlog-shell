@@ -2,5 +2,15 @@
 set -eu
 
 cd target
-deepdive do all > /dev/null
+
+
+# deepdive do all > /dev/null
+
+# deepdive db init
+# deepdive do process/init/app
+# deepdive do process/init/relation/articles
+# deepdive do data/articles
+
+./run.sh # Run generated execution script
+
 cd ..

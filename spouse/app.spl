@@ -1,0 +1,97 @@
+
+
+## Data processing ##
+
+
+person_mention(content[sentence_span][ner_span], doc_id, sentence_span, ner_span) <-
+	articles(doc_id, content),
+	ssplit<content>(_, sentence_span),
+	ner<content[sentence_span]>(ner_span, "PERSON").
+
+spouse_candidate(doc_id, sentence_span, person_span1, person_span2) <-
+	person_mention(name1, doc_id, sentence_span, person_span1),
+	person_mention(name2, doc_id, sentence_span, person_span2),
+	name1 != name2,
+	person_span1 != person_span2.
+
+
+
+## Distant Supervision ##
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	spouses_dbpedia(n1, n2),
+	articles(doc_id, content),
+	n1.equalsIgnoreCase(content[sentence_span][person_span1]),
+	n2.equalsIgnoreCase(content[sentence_span][person_span2]).
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "from_dbpedia") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	spouses_dbpedia(n1, n2),
+	articles(doc_id, content),
+	n2.equalsIgnoreCase(content[sentence_span][person_span1]),
+	n1.equalsIgnoreCase(content[sentence_span][person_span2]).
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:married_after") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles(doc_id, content),
+	<content[sentence_span]>\[x{.*} \s and \s y{.*} \s married]\,
+	x.contains(person_span1),
+	y.contains(person_span2).
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, 1, "pos:wife_husband_between") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles(doc_id, content),
+	<content[sentence_span]>\[x{ .* } \s (wife|husband) \s y{ .* }]\,
+	x.contains(person_span1),
+	y.contains(person_span2).
+
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:far_apart") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles(doc_id, content),
+# 	<content[sentence_span]>\[.* x{ .* } .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y],
+# 	x - y > 60.
+# 
+# spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:third_person_between") <-
+# 	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+# 	articles(doc_id, content),
+# 	person_mention(third_person, doc_id, sentence_span, third_person_span),
+# 	<content[sentence_span]>\[.* x{ .* } .* z{ .* } .* y{ .* } .* ]\,
+# 	content[sentence_span][person_span1] = content[sentence_span][x],
+# 	content[sentence_span][person_span2] = content[sentence_span][y],
+# 	third_person = content[sentence_span][z].
+
+spouse_label(doc_id, sentence_span, person_span1, person_span2, -1, "neg:familial_between") <-
+	spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+	articles(doc_id, content),
+	<content[sentence_span]>\[x{ .* } \s (mother|father|sister|brother|brother-in-law) \s y{ .* } ]\,
+	x.contains(person_span1),
+	y.contains(person_span2).
+
+
+spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, SUM(vote)) <-
+	spouse_label(doc_id, sentence_span, person_span1, person_span2, vote, rule_id).
+
+
+
+## Declaring prediction variable ##
+
+has_spouse?.
+
+has_spouse(doc_id, sentence_span, person_span1, person_span2) = {
+		POS: votes > 0 ;
+		NEG: votes < 0
+	} <- spouse_label_resolved(doc_id, sentence_span, person_span1, person_span2, votes).
+
+
+
+## Specifying connections between variables ##
+
+_ * [ has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span2, person_span1) ] <-
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2).
+
+_ * [ has_spouse(doc_id, sentence_span, person_span1, person_span2) => has_spouse(doc_id, sentence_span, person_span1, person_span3) ] <-
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span2),
+    spouse_candidate(doc_id, sentence_span, person_span1, person_span3).
