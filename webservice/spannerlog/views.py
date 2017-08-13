@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .wrapper import Wrapper, WrapperException, bcolors
 
+import re
 
 def index(request):
     return render(request, 'spannerlog/index.html', {})
@@ -24,8 +25,10 @@ def run(request):
 
         data = wrapper.run()
     except WrapperException as e:
+        ansi_escape = re.compile(r'\x1b[^m]*m')
         print(bcolors.FAIL + "WrapperException occured!" + bcolors.ENDC)
         print(str(e))
-        return HttpResponse(str(e), status=500)
+        print(ansi_escape.sub('', str(e)))
+        return HttpResponse(ansi_escape.sub('', str(e)), status=500)
   
     return HttpResponse(data, content_type='application/json')
