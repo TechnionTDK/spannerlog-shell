@@ -22,15 +22,19 @@ class Wrapper(object):
 
         try:
             if platform.system() == "Linux":
-                out = subprocess.check_output("""
-                    cd %s; 
-                    spl compile
-                    """ % (self.working_dir, ), shell=True)
+                df = Popen("cd %s; spl compile" % (self.working_dir,), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                out, err = df.communicate()
+                # out = subprocess.check_output("""
+                #     cd %s; 
+                #     spl compile
+                #     """ % (self.working_dir, ), shell=True)
 
                 print("Out:")
                 print(out)
+                print("Err:")
+                print(err)
         except subprocess.CalledProcessError as e:
-            print("exception!)")
+            print("exception!")
             print(str(e))
             print(str(e.output))
             print(e.output)
