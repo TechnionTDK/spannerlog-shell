@@ -2,8 +2,6 @@ import os
 import json
 import subprocess
 import platform
-import time
-from pprint import pprint
 
 
 class Wrapper(object):
@@ -29,17 +27,13 @@ class Wrapper(object):
                 #     spl compile
                 #     """ % (self.working_dir, ), shell=True)
 
+                if err:
+                    raise WrapperException(err)
                 print("Out:")
                 print(out)
-                print("Err:")
-                print(err)
+                
         except subprocess.CalledProcessError as e:
-            print("exception!")
-            print(str(e))
-            print(str(e.output))
-            print(e.output)
-            pprint(vars(e))
-
+            print("CalledProcessError occured!")
             raise WrapperException(e.output)
 
 
