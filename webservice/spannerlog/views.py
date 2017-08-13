@@ -15,10 +15,11 @@ def index(request):
 
 @csrf_exempt
 def run(request):
-
+    print(bcolors.OKBLUE)
     print("processing incoming request...")
     pprint(request.POST)
-
+    print(bcolors.ENDC)
+    
     try:
         wrapper = Wrapper()
         files = request.FILES.getlist('edb')
