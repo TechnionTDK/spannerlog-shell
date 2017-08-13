@@ -5,7 +5,8 @@ tput setaf 1
 if [ $# -gt 0 ]; then
 	echo "$1" >&2	
 else
-	sed $'s,.*,\e[31m&\e[m,'>&2
+	# sed $'s,.*,\e[31m&\e[m,'>&2
+	echo
 fi
 tput sgr0
 
