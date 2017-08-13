@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from .wrapper import Wrapper, WrapperException
+from .wrapper import Wrapper, WrapperException, bcolors
 
 
 def index(request):
@@ -24,7 +24,7 @@ def run(request):
 
         data = wrapper.run()
     except WrapperException as e:
-        print("WrapperException occured!")
+        print(bcolors.FAIL + "WrapperException occured!" + bcolors.ENDC)
         print(str(e))
         return HttpResponse(str(e), status=500)
   
