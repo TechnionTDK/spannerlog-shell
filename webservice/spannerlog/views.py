@@ -25,10 +25,10 @@ def run(request):
 
         data = wrapper.run()
     except WrapperException as e:
-        ansi_escape = re.compile(r'\x1b[^m]*m')
         print(bcolors.FAIL + "WrapperException occured!" + bcolors.ENDC)
         print(str(e))
-        print(ansi_escape.sub('', str(e)))
+
+        ansi_escape = re.compile(r'\x1b[^m]*m')
         return HttpResponse(ansi_escape.sub('', str(e)), status=500)
   
     return HttpResponse(data, content_type='application/json')
