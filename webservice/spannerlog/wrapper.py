@@ -1,5 +1,7 @@
 import os
 import json
+import subprocess
+import platform
 
 class Wrapper(object):
 
@@ -14,6 +16,11 @@ class Wrapper(object):
 
     def run(self):
         print("running %s..." % (self.app,))
+
+
+        print(platform.system())
+        # subprocess.call(["ls", "-l"])
+
 
         data = json.dumps({
            'some_var_1': 'foo',
