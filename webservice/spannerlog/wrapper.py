@@ -22,7 +22,7 @@ class Wrapper(object):
 
         try:
             if platform.system() == "Linux":
-                df = Popen("cd %s; spl compile" % (self.working_dir,), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                df = subprocess.Popen("cd %s; spl compile" % (self.working_dir,), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
                 out, err = df.communicate()
                 # out = subprocess.check_output("""
                 #     cd %s; 
