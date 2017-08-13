@@ -3,6 +3,8 @@ import json
 import subprocess
 import platform
 import time
+from pprint import pprint
+
 
 class Wrapper(object):
 
@@ -31,6 +33,8 @@ class Wrapper(object):
             print(str(e))
             print(str(e.output))
             print(e.output)
+            pprint(vars(e))
+
             raise WrapperException(e.output)
 
 
