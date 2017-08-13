@@ -2,6 +2,7 @@ import os
 import json
 import subprocess
 import platform
+import time
 
 class Wrapper(object):
 
@@ -19,7 +20,8 @@ class Wrapper(object):
 
 
         if platform.system() == "Linux":
-            subprocess.call(["echo", self.working_dir])
+            subprocess.call(["cd", self.working_dir])
+            time.sleep(2)
             subprocess.call(["ls", "-l", self.working_dir])
 
 
