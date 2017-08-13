@@ -7,7 +7,7 @@ class Wrapper(object):
 
     def __init__(self):
         self.app = "myapp"
-        self.working_dir = "spannerlog/temp/" + self.app + "/"
+        self.working_dir = os.path.abspath("spannerlog/temp/" + self.app + "/")
         self.db = self.app + "_db"
 
         self.init_app()
@@ -19,7 +19,8 @@ class Wrapper(object):
 
 
         if platform.system() == "Linux":
-            subprocess.call(["ls", "-l"])
+            subprocess.call(["echo", self.working_dir])
+            subprocess.call(["ls", "-l", self.working_dir])
 
 
         data = json.dumps({
