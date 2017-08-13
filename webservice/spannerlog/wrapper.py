@@ -20,12 +20,13 @@ class Wrapper(object):
 
 
         if platform.system() == "Linux":
-            subprocess.call("""
+            out = subprocess.check_output("""
                 cd %s; 
                 spl compile
-
                 """ % (self.working_dir, ), shell=True)
-            time.sleep(2)
+
+            print("Out:")
+            print(out)
 
 
         data = json.dumps({
