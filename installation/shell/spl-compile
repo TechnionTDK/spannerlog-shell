@@ -4,9 +4,6 @@ set -eEu -o pipefail
 if [[ ! -e app.spl || ! -e db.url ]]; then
     print-error "Not inside a Spannerlog application: app.spl and db.url should be all present in a parent directory"
 fi
-echo "-1"
-error "test"
-echo "0"
 
 # delete old target directory and create a new one
 rm -rf target
