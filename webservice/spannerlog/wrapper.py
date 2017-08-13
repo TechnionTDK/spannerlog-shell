@@ -28,7 +28,7 @@ class Wrapper(object):
                 #     """ % (self.working_dir, ), shell=True)
 
                 if err:
-                    raise WrapperException(err)
+                    raise WrapperException(err.decode('utf-8'))
                 print("Out:")
                 print(out)
                 
