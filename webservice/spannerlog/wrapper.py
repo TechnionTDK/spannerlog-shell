@@ -51,7 +51,7 @@ class Wrapper(object):
 
 
     def add_input_file(self, file):
-        path = self.working_dir + "edb/" + file.name
+        path = self.working_dir + "edb/" + file.name.lower()
         if not os.path.exists(path):
             with open(path, 'wb+') as destination:
                 for chunk in file.chunks():
