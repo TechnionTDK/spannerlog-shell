@@ -70,9 +70,12 @@ class Wrapper(object):
         if not os.path.exists(self.working_dir + "edb"):
             os.makedirs(self.working_dir + "edb")
 
+        if not os.path.exists(self.working_dir + "edb/dummy.csv"):
+            with open(self.working_dir + "edb/dummy.csv", 'w') as f:
+                f.write("4\n" + self.db)
+
         if not os.path.exists(self.working_dir + "db.url"):
             with open(self.working_dir + "db.url", 'w') as f:
-                # f.write("postgresql://localhost/" + self.db)
                 f.write("postgresql://yoavn:1234@localhost:5432/" + self.db)
                 
         if not os.path.exists(self.working_dir + "app.spl"):
