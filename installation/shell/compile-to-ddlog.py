@@ -132,9 +132,9 @@ class DdlogCompiler(object):
             self.schema.append(schema_str)
 
     def print(self):
-        print(self.schema.join("\n"))
+        print("\n".join(self.schema))
         print("\n")
-        print(self.rules.join("\n"))
+        print("\n".join(self.rules))
 
 
 def main():
