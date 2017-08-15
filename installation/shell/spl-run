@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
-echo 123
-# cd target
+
+cd target
 
 
 # deepdive do all > /dev/null
@@ -11,6 +11,6 @@ echo 123
 # deepdive do process/init/relation/articles
 # deepdive do data/articles
 
-# ./run.sh # Run generated execution script
+./run.sh # Run generated execution script
 
 cd ..
