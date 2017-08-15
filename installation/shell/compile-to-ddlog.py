@@ -128,7 +128,7 @@ class DdlogCompiler(object):
                 # print(atom_str + " :- articles(x,y).")
 
         if using_dummy:
-            schema_str = "dummy(\n\t" + '{0:<18} {1:<}'.format("column1", "int") + "\n).\n"
+            schema_str = "dummy(\n\t" + '{0:<18} {1:<}'.format("column1", "text") + "\n).\n"
             self.schema.append(schema_str)
 
     def print(self):

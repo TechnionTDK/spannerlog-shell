@@ -72,7 +72,7 @@ class Wrapper(object):
 
         if not os.path.exists(self.working_dir + "edb/dummy.csv"):
             with open(self.working_dir + "edb/dummy.csv", 'w') as f:
-                f.write("4\n" + self.db)
+                f.write("\"a\"\n\"b\"" + self.db)
 
         if not os.path.exists(self.working_dir + "db.url"):
             with open(self.working_dir + "db.url", 'w') as f:
