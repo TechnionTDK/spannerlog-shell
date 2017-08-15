@@ -20,7 +20,7 @@ class Wrapper(object):
 
         try:
             if platform.system() == "Linux":
-                cmd = "cd %s; spl compile" % (self.working_dir,)
+                cmd = "cd %s; spl compile; spl run" % (self.working_dir,)
 
                 df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
                 out, err = df.communicate()
@@ -72,7 +72,7 @@ class Wrapper(object):
 
         if not os.path.exists(self.working_dir + "edb/dummy.csv"):
             with open(self.working_dir + "edb/dummy.csv", 'w') as f:
-                f.write("\"a\"\n\"b\"" + self.db)
+                f.write("\"a\"\n\"b\"\n")
 
         if not os.path.exists(self.working_dir + "db.url"):
             with open(self.working_dir + "db.url", 'w') as f:
