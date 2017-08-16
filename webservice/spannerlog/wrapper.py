@@ -29,7 +29,7 @@ class Wrapper(object):
                     if "error" in err.lower():
                         raise WrapperException(err.decode('utf-8'))
                     print(err)
-                else;
+                else:
                     print(out)
                 
         except subprocess.CalledProcessError as e:
