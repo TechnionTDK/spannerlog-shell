@@ -26,9 +26,11 @@ class Wrapper(object):
                 out, err = df.communicate()
 
                 if err:
-                    raise WrapperException(err.decode('utf-8'))
-                print("Out:")
-                print(out)
+                    if "error" in err.lower():
+                        raise WrapperException(err.decode('utf-8'))
+                    print(err)
+                else;
+                    print(out)
                 
         except subprocess.CalledProcessError as e:
             print("CalledProcessError occured!")
