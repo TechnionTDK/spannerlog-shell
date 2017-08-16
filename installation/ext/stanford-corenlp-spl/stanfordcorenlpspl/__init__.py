@@ -1,1 +1,1 @@
-from stanfordcorenlp.corenlp import StanfordCoreNLP
+from stanfordcorenlpspl.corenlp import StanfordCoreNLP
