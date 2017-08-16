@@ -15,7 +15,7 @@ for idx, (token, category, (m,n)) in enumerate(entities):
         entity_end = n
     else:
         if entity_start == -1 :
-            C = m
+            entity_start = m
             entity_end = n
             prev_category = category
         else:
