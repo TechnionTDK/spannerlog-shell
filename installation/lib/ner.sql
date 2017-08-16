@@ -1,7 +1,7 @@
 CREATE FUNCTION ner (s text)
     RETURNS TABLE (entity_start int, entity_end int, category text)
 AS $$
-from stanfordcorenlp import StanfordCoreNLP
+from stanfordcorenlpspl import StanfordCoreNLP
 
 nlp = StanfordCoreNLP('http://localhost')
 
