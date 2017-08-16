@@ -1,6 +1,6 @@
 import unittest
 
-from stanfordcorenlp import StanfordCoreNLP
+from stanfordcorenlpspl import StanfordCoreNLP
 
 
 class MyTestCase(unittest.TestCase):

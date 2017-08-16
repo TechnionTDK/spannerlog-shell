@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='stanfordcorenlpspl',
-    packages=['stanfordcorenlp'],
+    packages=['stanfordcorenlpspl'],
     version='3.7.0.2',
     description='Python wrapper for Stanford CoreNLP.',
 
