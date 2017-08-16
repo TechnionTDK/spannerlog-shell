@@ -44,7 +44,6 @@ class Wrapper(object):
 
 
     def write_program(self, text):
-        print(text)
         print("writing to " + self.working_dir + "app.spl")
         with open(self.working_dir + "app.spl", 'w') as file:
             file.write(text)
