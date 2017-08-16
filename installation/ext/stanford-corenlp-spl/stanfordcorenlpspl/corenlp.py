@@ -151,11 +151,13 @@ class StanfordCoreNLP:
         r_dict = self._request('ner', sentence)
         words = []
         ner_tags = []
+        spans = []
         for s in r_dict['sentences']:
             for token in s['tokens']:
                 words.append(token['word'])
                 ner_tags.append(token['ner'])
-        return list(zip(words, ner_tags))
+                spans.append((token['characterOffsetBegin'], token['characterOffsetEnd']))
+        return list(zip(words, ner_tags, spans))
 
     def parse(self, sentence):
         r_dict = self._request('pos,parse', sentence)
