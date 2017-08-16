@@ -2,7 +2,7 @@ import os
 import json
 import subprocess
 import platform
-
+import psycopg2
 
 class Wrapper(object):
 
@@ -11,8 +11,18 @@ class Wrapper(object):
         self.working_dir = "spannerlog/temp/" + self.app + "/"
         self.db = self.app + "_db"
 
-        self.init_app()
+        self.init_app()     
 
+    def get_schema(self):
+
+        conn = psycopg2.connect("dbname='myapp_db' user='yoavn' host='localhost' password='1234'")
+        cur = conn.cursor()
+
+        # continue from here: https://stackoverflow.com/questions/582657/how-do-i-discover-the-structure-of-a-postgresql-database
+        # cur.execute("""...""") 
+
+        rows = cur.fetchall()
+        conn.close()
 
 
     def run(self):
@@ -54,10 +64,9 @@ class Wrapper(object):
 
     def add_input_file(self, file):
         path = self.working_dir + "edb/" + file.name.lower()
-        if not os.path.exists(path):
-            with open(path, 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
+        with open(path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
 
 
 
