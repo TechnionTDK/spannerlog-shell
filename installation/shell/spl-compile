@@ -30,11 +30,11 @@ fi
 
 # compile spannerlog program
 cmd="java -jar $SPL_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.spl ${schema[*]:-}"
-($cmd 2>&1>&3 | print-error) 3> target/splog.json
+($cmd 2>&1>&3 | print-error) 3> target/compiled.spl.json
 
-(compile-to-ddlog.py target/splog.json) > target/app.ddlog 			# generate ddlog program
-(compile-rgx-to-sql.py target/splog.json) > target/rgx.sql 			# compile regex formulas into an sql script
-(compile-exec-plan-to-bash.py target/splog.json) > target/run.sh 	# generate execution script
+(compile-to-ddlog.py target/compiled.spl.json) > target/app.ddlog 			# generate ddlog program
+(compile-rgx-to-sql.py target/compiled.spl.json) > target/rgx.sql 			# compile regex formulas into an sql script
+(compile-exec-plan-to-bash.py target/compiled.spl.json) > target/run.sh 	# generate execution script
 
 cd target
 chmod -R 777 .* 
