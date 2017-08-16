@@ -26,7 +26,7 @@ class Wrapper(object):
                 out, err = df.communicate()
 
                 if err:
-                    if "error" in err.lower():
+                    if "error" in err.decode('utf-8').lower():
                         raise WrapperException(err.decode('utf-8'))
                     print(err)
                 else:
