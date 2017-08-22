@@ -16,17 +16,17 @@ mkdir target/udf
 schema=()
 ln -s "../db.url" "target/db.url"
 if [[ -d edb ]]; then
-	ln -s "../edb" "target/input"
-	(extract-edb-schema.py edb) > target/edb.schema.json
-	schema+=(-edb target/edb.schema.json)
+    ln -s "../edb" "target/input"
+    (extract-edb-schema.py edb) > target/edb.schema.json
+    schema+=(-edb target/edb.schema.json)
 # else
-# 	echo "[INFO] 'edb' folder does not exist" >&2
+#   echo "[INFO] 'edb' folder does not exist" >&2
 fi
 if [[ -d ief ]]; then
-	(extract-ief-schema.py ief) > target/ief.schema.json
-	schema+=(-ief target/ief.schema.json)
+    (extract-ief-schema.py ief) > target/ief.schema.json
+    schema+=(-ief target/ief.schema.json)
 # else
-# 	echo "[INFO] 'ief' folder does not exist" >&2
+#   echo "[INFO] 'ief' folder does not exist" >&2
 fi
 
 cmd="java -jar $SPL_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.spl ${schema[*]:-}"
@@ -34,25 +34,25 @@ logging-with-ts "Compiling program:"
 logging-with-ts " $cmd"
 ($cmd 2>&1>&3 | print-error) 3> target/compiled.spl.json
 
-(compile-to-ddlog.py target/compiled.spl.json) > target/app.ddlog 			# generate ddlog program
-(compile-rgx-to-sql.py target/compiled.spl.json) > target/rgx.sql 			# compile regex formulas into an sql script
-(compile-exec-plan-to-bash.py target/compiled.spl.json) > target/run.sh 	# generate execution script
+(compile-to-ddlog.py target/compiled.spl.json) > target/app.ddlog           # generate ddlog program
+(compile-rgx-to-sql.py target/compiled.spl.json) > target/rgx.sql           # compile regex formulas into an sql script
+(compile-exec-plan-to-bash.py target/compiled.spl.json) > target/run.sh     # generate execution script
 
 cd target
 chmod -R 777 .* 
-deepdive compile 							# compile ddlog program
-deepdive db init 							# initialize databases
-deepdive do process/init/app > /dev/null	# initialize ddlog app
+deepdive compile                            # compile ddlog program
+deepdive db init                            # initialize databases
+deepdive do process/init/app > /dev/null    # initialize ddlog app
 
 # add procedural code to postgres
 url=$(eval echo "$(cat db.url)")
 db=${url##*/}
-psql -d $db -c "CREATE EXTENSION plpythonu"
-echo "Importing built-in IEFs"
-psql -d $db -f "$SPL_HOME/lib/ner.sql"		# always?
-psql -d $db -f "$SPL_HOME/lib/ssplit.sql"
-if [[ -e rgx.sql ]]; then
-	echo "Importing auto-generated regex formulas"
+psql -d $db -c "CREATE EXTENSION plpythonu" | logging-with-ts
+logging-with-ts "Importing built-in IEFs"
+psql -d $db -f "$SPL_HOME/lib/ner.sql" | logging-with-ts        # always?
+psql -d $db -f "$SPL_HOME/lib/ssplit.sql" | logging-with-ts
+if [[ -e rgx.sql ]] || [ -s rgx.sql ]; then
+    logging-with-ts "Importing auto-generated regex formulas"
     psql -d $db -f rgx.sql
 fi
 
