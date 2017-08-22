@@ -3,6 +3,9 @@ import csv
 import os
 import json
 import sys
+import subprocess
+
+from collections import OrderedDict
 
 
 def main():
@@ -12,18 +15,24 @@ def main():
     for filename in os.listdir(sys.argv[1]):
         if filename.endswith('.tsv') or filename.endswith('.csv'):
             delim = "\t" if filename.endswith('.tsv') else ","
-            with open(os.path.join(sys.argv[1], filename), encoding="utf-8", errors = 'ignore') as infile:
+            filepath = os.path.join(sys.argv[1], filename)
+            with open(filepath, encoding="utf-8", errors = 'ignore') as infile:
                 reader = csv.reader(infile, delimiter=delim)
                 
                 table_name = os.path.splitext(filename)[0]
                 db_schema[table_name] = extract_table_schema(next(reader))
+
+            cmd = "tail -n +2 %s > %s.temp; mv %s.temp %s" % (filepath, filepath, filepath, filepath)
+            df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            out, err = df.communicate()
+
 
     print(json.dumps(db_schema, sort_keys=True, indent=4))
 
 
 def extract_table_schema(row):
     cnt = 1
-    table_schema = {}
+    table_schema = OrderedDict()
 
     for val in row:
         if val.isdigit() or (val.startswith('-') and val[1:].isdigit()):
@@ -34,7 +43,7 @@ def extract_table_schema(row):
             attr_type = "text"
 
         # table_schema["column" + str(cnt)] = attr_type
-        table_schema[val.replace("-", "_")] = attr_type
+        table_schema[val] = attr_type
         cnt += 1
 
     return table_schema

@@ -12,7 +12,6 @@ rm -rf target
 mkdir target
 mkdir target/udf
 
-# collect schemata
 schema=()
 ln -s "../db.url" "target/db.url"
 if [[ -d edb ]]; then
@@ -28,6 +27,9 @@ if [[ -d ief ]]; then
 # else
 #   echo "[INFO] 'ief' folder does not exist" >&2
 fi
+
+logging-with-ts "Collecting schemas:"
+logging-with-ts "  ${schema[*]:-}"
 
 cmd="java -jar $SPL_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.spl ${schema[*]:-}"
 logging-with-ts "Compiling program:"
