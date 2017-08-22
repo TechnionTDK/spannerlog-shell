@@ -14,7 +14,7 @@ class Wrapper(object):
     self.init_app()     
 
   def get_schema(self):
-    conn = psycopg2.connect("dbname='%s' user='yoavn' host='localhost' password='1234'", (self.db,))
+    conn = psycopg2.connect("dbname='%s' user='yoavn' host='localhost' password='1234'" % (self.db,))
     cur = conn.cursor()
 
     # continue from here: https://stackoverflow.com/questions/582657/how-do-i-discover-the-structure-of-a-postgresql-database
