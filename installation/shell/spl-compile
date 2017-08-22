@@ -7,7 +7,7 @@ if [[ ! -e app.spl || ! -e db.url ]]; then
     print-error "Not inside a Spannerlog application: app.spl and db.url should be all present in a parent directory"
 fi
 
-(logging-with-ts "Deleting old target directory and creating new one")
+echo "Deleting old target directory and creating new one" > (logging-with-ts >&1)
 rm -rf target
 mkdir target
 mkdir target/udf
@@ -30,8 +30,8 @@ if [[ -d ief ]]; then
 fi
 
 cmd="java -jar $SPL_HOME/spannerlog-1.0-SNAPSHOT.jar -program app.spl ${schema[*]:-}"
-(logging-with-ts "Compiling program:")
-(logging-with-ts " $cmd")
+# (logging-with-ts "Compiling program:")
+# (logging-with-ts " $cmd")
 ($cmd 2>&1>&3 | print-error) 3> target/compiled.spl.json
 
 (compile-to-ddlog.py target/compiled.spl.json) > target/app.ddlog 			# generate ddlog program
