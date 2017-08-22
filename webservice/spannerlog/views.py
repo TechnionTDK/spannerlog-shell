@@ -45,4 +45,8 @@ def run(request):
 def get_table(request, table_name):
   print(bcolors.OKBLUE + "Incoming: table name" + bcolors.ENDC)
   pprint(table_name)
-  
+
+  wrapper = Wrapper()
+  data = wrapper.get_table(table_name)
+  return HttpResponse(data, content_type='application/json')
+
