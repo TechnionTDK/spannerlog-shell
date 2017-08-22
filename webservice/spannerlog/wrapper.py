@@ -11,20 +11,34 @@ class Wrapper(object):
     self.app = "myapp"
     self.working_dir = "spannerlog/temp/" + self.app + "/"
     self.db = self.app + "_db"
-    self.init_app()     
+    self.init_app() 
+
 
   def get_schema(self):
     conn = psycopg2.connect("dbname='%s' user='yoavn' host='localhost' password='1234'" % (self.db,))
     cur = conn.cursor()
-
-    # continue from here: https://stackoverflow.com/questions/582657/how-do-i-discover-the-structure-of-a-postgresql-database
     cur.execute("""
       SELECT table_name
       FROM information_schema.tables
       WHERE table_type = 'BASE TABLE'
           AND table_schema NOT IN
               ('pg_catalog', 'information_schema');
-      """) 
+      """) # source: https://stackoverflow.com/questions/582657/how-do-i-discover-the-structure-of-a-postgresql-database
+    rows = cur.fetchall()
+    rows = [rec[0] for rec in rows]
+    data = json.dumps(rows)
+
+    conn.close()
+    return data
+
+  def get_table(self, table_name):
+    conn = psycopg2.connect("dbname='%s' user='yoavn' host='localhost' password='1234'" % (self.db,))
+    cur = conn.cursor()
+    cur.execute("""
+      SELECT column_name
+          FROM information_schema.columns
+      WHERE table_name = '%s';
+      """, (table_name,)) 
     rows = cur.fetchall()
     rows = [rec[0] for rec in rows]
     data = json.dumps(rows)

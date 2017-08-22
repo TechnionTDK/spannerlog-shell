@@ -3,11 +3,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function renderTable() {
-  var tableName = $("#tables").val()
-  console.log("Rendering table " + tableName)
-}
-
 // pre-submit callback 
 function showRequest(formData, jqForm, options) { 
     // formData is an array; here we use $.param to convert it to a string to display it 
@@ -60,7 +55,7 @@ function handleResponse(responseText, statusText, xhr, $form)  {
           <select id="tables" name="tables" data-placeholder="tables" class="chosen-select" title="tables">
           </select>
       </div>
-      <div id="table-active"></div>
+      <div id="table-active-container"></div>
       `);
 
     // Add available tables to select
@@ -85,6 +80,16 @@ function handleResponse(responseText, statusText, xhr, $form)  {
     $('.corenlp_error').remove();  // Clear error messages
     $('#database').show();
 } 
+
+function renderTable() {
+  var tableName = $("#tables").val()
+  console.log("Rendering table " + tableName)
+
+  // Empty div
+  $('#table-active-container').empty();
+
+  $('#table-active-container').append('<table id="table-active" class="table table-bordered"></table>');
+}
 
 function handleError(data) {
     DATA = data;

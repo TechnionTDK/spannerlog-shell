@@ -17,7 +17,7 @@ def index(request):
 
 @csrf_exempt
 def run(request):
-  print(bcolors.OKBLUE + "New incoming request" + bcolors.ENDC)
+  print(bcolors.OKBLUE + "Incoming: program" + bcolors.ENDC)
   pprint(request.POST)
 
   try:
@@ -40,3 +40,9 @@ def run(request):
     return HttpResponse(ansi_escape.sub('', str(e)), status=500)
 
   return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def get_table(request, table_name):
+  print(bcolors.OKBLUE + "Incoming: table name" + bcolors.ENDC)
+  pprint(table_name)
+  
