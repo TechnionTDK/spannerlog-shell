@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # spl-compile -- Compiles a Spannerlog program, and makes preparations for running it
-set -eEu -o pipefail
+set -eu -o pipefail
 
 # check if all necessary files are present
 if [[ ! -e app.spl || ! -e db.url ]]; then

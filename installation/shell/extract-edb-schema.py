@@ -12,7 +12,7 @@ def main():
 	for filename in os.listdir(sys.argv[1]):
 		if filename.endswith('.tsv') or filename.endswith('.csv'):
 			delim = "\t" if filename.endswith('.tsv') else ","
-			with open(os.path.join(sys.argv[1], filename)) as infile:
+			with open(os.path.join(sys.argv[1], filename), encoding="utf-8") as infile:
 				reader = csv.reader(infile, delimiter=delim)
 
 				table_name = os.path.splitext(filename)[0]
