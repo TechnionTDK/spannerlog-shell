@@ -101,8 +101,17 @@ function renderTable() {
 
         // Empty div
         $('#table-active-container').empty();
-        $('#table-active-container').append('<table id="table-active" class="table table-bordered"></table>');
+        $('#table-active-container').append(`
+            <table id="table-active" class="table table-bordered">
+              <thead> <tr> </tr> </thead>
+            </table>
+          `);
 
+        var header = data[0]
+        $.each(header, function(index, colName){
+          $('#table-active thead tr').append('<th>' + colName + '</th>');
+        });
+        
         // Update UI
         // $('#loading').hide();
         $('.database_error').remove();  // Clear error messages

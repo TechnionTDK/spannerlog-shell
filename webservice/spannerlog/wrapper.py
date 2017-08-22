@@ -40,8 +40,11 @@ class Wrapper(object):
       WHERE table_name = %s;
       """, (table_name,)) 
     rows = cur.fetchall()
-    rows = [rec[0] for rec in rows]
-    data = json.dumps(rows)
+    header = [rec[0] for rec in rows]
+
+    table = [header]
+
+    data = json.dumps(table)
 
     conn.close()
     return data
