@@ -76,7 +76,7 @@ function handleResponse(responseText, statusText, xhr, $form)  {
     }
 
     // Add listener to table selector
-    $(".target").change(renderTable);
+    $("#tables").change(renderTable);
 
     // Render selected table
     renderTable();
