@@ -1,4 +1,8 @@
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 // pre-submit callback 
 function showRequest(formData, jqForm, options) { 
     // formData is an array; here we use $.param to convert it to a string to display it 
@@ -32,8 +36,36 @@ function handleResponse(responseText, statusText, xhr, $form)  {
     console.log(responseText);
     console.log(xhr);
 
+    var schema = xhr.responseJSON
+
+    // Empty divs
+    $('#database').empty();
+
+    $('#database').append(`
+      <h4 class="red">Tables:</h4>
+      <div class="col-sm-2" style="margin-bottom: 15px;">
+          <label for="tables" class="label">&mdash; Displayed Table &mdash;</label>
+          <select id="tables" name="tables" data-placeholder="tables" class="chosen-select" title="tables">
+          </select>
+      </div>
+      <div id="table-active"></div>
+      `);
+
+    $.each(schema, function(index, tableName){
+      $('#tables').append('<option value="' + tableName + '">' + capitalizeFirstLetter(tableName) + '</option>');
+    });
+
+    if ($.inArray("q", schema)) {
+        $("#tables").val("q");
+    } else {
+      $("#tables").val(schema[0]);
+    }
+
     $('#loading').hide();
     $('.corenlp_error').remove();  // Clear error messages
+    $('#database').show();
+
+    // render(data);
 } 
 
 function handleError(data) {
