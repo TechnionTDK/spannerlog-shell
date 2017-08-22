@@ -102,7 +102,7 @@ function renderTable() {
         // Empty div
         $('#table-active-container').empty();
         $('#table-active-container').append(`
-            <table id="table-active" class="table table-bordered">
+            <table id="table-active" class="table table-bordered table-hover">
               <thead><tr></tr></thead>
               <tbody></tbody>
             </table>
@@ -116,7 +116,7 @@ function renderTable() {
         $.each(data.slice(1), function(index, record){
           tableRow = ''
           $.each(record, function(index, colVal){
-            tableRow += '<th>' + colVal + '</th>'
+            tableRow += '<td>' + colVal + '</td>'
           });
 
           $('#table-active tbody').append('<tr>' + tableRow + '</tr>');
