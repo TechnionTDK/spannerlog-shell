@@ -30,6 +30,7 @@ def run(request):
     wrapper.run()
 
     data = wrapper.get_schema()
+    pprint(data)
   except WrapperException as e:
     print(bcolors.FAIL)
     print("WrapperException occured!")

@@ -26,16 +26,10 @@ class Wrapper(object):
               ('pg_catalog', 'information_schema');
       """) 
     rows = cur.fetchall()
-
-    print(rows)
+    rows = [rec[0] for rec in rows]
+    data = json.dumps(rows)
 
     conn.close()
-
-    data = json.dumps({
-      'some_var_1': 'foo',
-      'some_var_2': 'bar',
-    })
-
     return data
 
 
