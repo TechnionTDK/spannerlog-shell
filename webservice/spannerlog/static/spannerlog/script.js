@@ -113,7 +113,7 @@ function renderTable() {
           $('#table-active thead tr').append('<th>' + colName + '</th>');
         });
 
-        $.each(header.slice(1), function(index, record){
+        $.each(data.slice(1), function(index, record){
           tableRow = ''
           $.each(record, function(index, colVal){
             tableRow += '<th>' + colVal + '</th>'
