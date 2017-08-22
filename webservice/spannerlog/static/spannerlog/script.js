@@ -103,13 +103,23 @@ function renderTable() {
         $('#table-active-container').empty();
         $('#table-active-container').append(`
             <table id="table-active" class="table table-bordered">
-              <thead> <tr> </tr> </thead>
+              <thead><tr></tr></thead>
+              <tbody></tbody>
             </table>
           `);
 
         var header = data[0]
         $.each(header, function(index, colName){
           $('#table-active thead tr').append('<th>' + colName + '</th>');
+        });
+
+        $.each(header.slice(1), function(index, record){
+          tableRow = ''
+          $.each(record, function(index, colVal){
+            tableRow += '<th>' + colVal + '</th>'
+          });
+
+          $('#table-active tbody').append('<tr>' + tableRow + '</tr>');
         });
         
         // Update UI
