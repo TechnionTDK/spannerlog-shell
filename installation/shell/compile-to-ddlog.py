@@ -104,7 +104,7 @@ class DdlogCompiler(object):
                     self.rules.append(step["cmd"] + "\n")
                     printed.append(name)            
 
-        using_dummy = False           
+        # using_dummy = False           
         # Creating a dummy rule for each i-schema without a ddlog-compiled rule.
         for sch in isch:
             if sch["name"] not in printed:
@@ -123,13 +123,13 @@ class DdlogCompiler(object):
                         attrs.append("1")
                 atom_str = sch["name"] + "(" + ", ".join(attrs) + ")"
                 self.rules.append(atom_str + " :- dummy(_), [0 > 1].\n")
-                using_dummy = True
+                # using_dummy = True
                 # print(atom_str + " :- 0 > 1.")
                 # print(atom_str + " :- articles(x,y).")
 
-        if using_dummy:
-            schema_str = "dummy(\n\t" + '{0:<18} {1:<}'.format("column1", "text") + "\n).\n"
-            self.schema.append(schema_str)
+        # if using_dummy:
+        #     schema_str = "dummy(\n\t" + '{0:<18} {1:<}'.format("column1", "text") + "\n).\n"
+        #     self.schema.append(schema_str)
 
     def print(self):
         print("\n".join(self.schema))
