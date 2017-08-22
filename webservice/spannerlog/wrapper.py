@@ -25,13 +25,14 @@ class Wrapper(object):
               ('pg_catalog', 'information_schema');
       """) # source: https://stackoverflow.com/questions/582657/how-do-i-discover-the-structure-of-a-postgresql-database
     rows = cur.fetchall()
-    rows = [rec[0] for rec in rows]
+    rows = tuple(rec[0] for rec in rows)
     data = json.dumps(rows)
 
     conn.close()
     return data
 
   def get_table(self, table_name):
+    table = []
     conn = psycopg2.connect("dbname='%s' user='yoavn' host='localhost' password='1234'" % (self.db,))
     cur = conn.cursor()
     cur.execute("""
@@ -40,9 +41,16 @@ class Wrapper(object):
       WHERE table_name = %s;
       """, (table_name,)) 
     rows = cur.fetchall()
-    header = [rec[0] for rec in rows]
+    header = tuple(rec[0] for rec in rows)
 
-    table = [header]
+    table.append(header)
+
+    cur.execute("""
+      SELECT * FROM %s LIMIT 10;
+      """, (table_name,)) 
+    rows = cur.fetchall()
+
+    table = table + rows
 
     data = json.dumps(table)
 
