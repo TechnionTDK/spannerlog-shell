@@ -38,9 +38,16 @@ function handleResponse(responseText, statusText, xhr, $form)  {
 
     var schema = xhr.responseJSON
 
+    // Remove table dummy from results set
+    var index = schema.indexOf("dummy");
+    if (index > -1) {
+      schema.splice(index, 1);
+    }
+
     // Empty divs
     $('#database').empty();
 
+    // Add selector for available tables to display
     $('#database').append(`
       <h4 class="red">Tables:</h4>
       <div class="col-sm-2" style="margin-bottom: 15px;">
@@ -51,15 +58,19 @@ function handleResponse(responseText, statusText, xhr, $form)  {
       <div id="table-active"></div>
       `);
 
+    // Add available tables to select
     $.each(schema, function(index, tableName){
       $('#tables').append('<option value="' + tableName + '">' + capitalizeFirstLetter(tableName) + '</option>');
     });
 
+    // Select table Q if defined. Otherwise, choose the first one
     if ($.inArray("q", schema)) {
-        $("#tables").val("q");
+      $("#tables").val("q");
     } else {
       $("#tables").val(schema[0]);
     }
+
+    console.log(("#tables").val())
 
     $('#loading').hide();
     $('.corenlp_error').remove();  // Clear error messages
