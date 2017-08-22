@@ -7,7 +7,7 @@ if [[ ! -e app.spl || ! -e db.url ]]; then
     print-error "Not inside a Spannerlog application: app.spl and db.url should be all present in a parent directory"
 fi
 
-echo "Deleting old target directory and creating new one" > (logging-with-ts >&1)
+# echo "Deleting old target directory and creating new one" > (logging-with-ts >&1)
 rm -rf target
 mkdir target
 mkdir target/udf
