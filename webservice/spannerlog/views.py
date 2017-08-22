@@ -15,7 +15,7 @@ def index(request):
 
 @csrf_exempt
 def run(request):
-    print(bcolors.OKBLUE + "processing incoming request...")
+    print(bcolors.OKBLUE + "New incoming request" + bcolors.ENDC)
     pprint(request.POST)
 
     try:
@@ -28,10 +28,9 @@ def run(request):
         wrapper.write_program(request.POST['program'])
 
         data = wrapper.run()
-        print(bcolors.ENDC)
     except WrapperException as e:
         print(bcolors.FAIL)
-        print("WrapperException occured!" + bcolors.ENDC)
+        print("WrapperException occured!")
         print(str(e))
 
         ansi_escape = re.compile(r'\x1b[^m]*m')
