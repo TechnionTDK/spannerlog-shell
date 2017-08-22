@@ -90,7 +90,7 @@ function renderTable() {
 
   $.ajax({
     type: 'GET',
-    url: '/table/' + tableName + '/',
+    url: 'table/' + tableName + '/',
     dataType: 'json',
     success: function(data) {
       console.log(data)

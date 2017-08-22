@@ -37,7 +37,7 @@ class Wrapper(object):
     cur.execute("""
       SELECT column_name
           FROM information_schema.columns
-      WHERE table_name = '%s';
+      WHERE table_name = %s;
       """, (table_name,)) 
     rows = cur.fetchall()
     rows = [rec[0] for rec in rows]
