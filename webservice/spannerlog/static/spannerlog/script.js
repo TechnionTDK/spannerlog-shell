@@ -55,7 +55,7 @@ function handleResponse(responseText, statusText, xhr, $form)  {
           <select id="tables" name="tables" data-placeholder="tables" class="chosen-select" title="tables">
           </select>
       </div>
-      <div id="table-active-container"></div>
+      <div id="table-active-container" style="display:none"></div>
       `);
 
     // Add available tables to select
@@ -85,10 +85,39 @@ function renderTable() {
   var tableName = $("#tables").val()
   console.log("Rendering table " + tableName)
 
-  // Empty div
-  $('#table-active-container').empty();
+  $('#tables').prop('disabled', true);
+  // $('#loading').show();
 
-  $('#table-active-container').append('<table id="table-active" class="table table-bordered"></table>');
+  $.ajax({
+    type: 'GET',
+    url: '/table/' + tableName,
+    dataType: 'json',
+    success: function(data) {
+      console.log(data)
+      $('#tables').prop('disabled', false);
+      if (typeof data === 'undefined') {
+        alert("Failed to reach server!");
+      } else {
+
+        // Empty div
+        $('#table-active-container').empty();
+        $('#table-active-container').append('<table id="table-active" class="table table-bordered"></table>');
+
+        // Update UI
+        // $('#loading').hide();
+        $('.database_error').remove();  // Clear error messages
+        $('#table-active-container').show();
+      }
+    },
+    error: function(data) {
+      var alertDiv = $('<div/>').addClass('alert').addClass('alert-danger').addClass('alert-dismissible').addClass('database_error').attr('role', 'alert')
+      var button = $('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+      var message = $('<span/>').text(data.responseText);
+      button.appendTo(alertDiv);
+      message.appendTo(alertDiv);
+      alertDiv.appendTo($('#database'));
+    }
+  });
 }
 
 function handleError(data) {
