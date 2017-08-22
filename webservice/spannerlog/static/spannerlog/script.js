@@ -3,6 +3,11 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function renderTable() {
+  var tableName = $("#tables").val()
+  console.log("Rendering table " + tableName)
+}
+
 // pre-submit callback 
 function showRequest(formData, jqForm, options) { 
     // formData is an array; here we use $.param to convert it to a string to display it 
@@ -70,13 +75,15 @@ function handleResponse(responseText, statusText, xhr, $form)  {
       $("#tables").val(schema[0]);
     }
 
-    console.log(("#tables").val())
+    // Add listener to table selector
+    $(".target").change(renderTable);
+
+    // Render selected table
+    renderTable();
 
     $('#loading').hide();
     $('.corenlp_error').remove();  // Clear error messages
     $('#database').show();
-
-    // render(data);
 } 
 
 function handleError(data) {
