@@ -35,12 +35,16 @@ class Wrapper(object):
                 df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
                 out, err = df.communicate()
 
+                out = out.decode('utf-8')
+                err = err.decode('utf-8')
+
+                print(out)
+
                 if err:
-                    if "error" in err.decode('utf-8').lower():
-                        raise WrapperException(err.decode('utf-8'))
+                    if "error" in err.lower():
+                        raise WrapperException(err)
                     print(err)
-                else:
-                    print(out)
+
                 
         except subprocess.CalledProcessError as e:
             print("CalledProcessError occured!")
