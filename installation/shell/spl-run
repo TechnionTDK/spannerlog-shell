@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
+# spl-run -- Runs a compiled Spannerlog program
 set -eu
-
 cd target
-
-
 # deepdive do all > /dev/null
 
 # deepdive db init
@@ -12,5 +10,4 @@ cd target
 # deepdive do data/articles
 
 ./run.sh # Run generated execution script
-
 cd ..
