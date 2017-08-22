@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     # ex: /spannerlog/run/
     url(r'^run/$', views.run, name='run'),
-    # ex: /spannerlog/run/
+    # ex: /spannerlog/table/articles/
     url(r'^table/(?P<table_name>[a-z]+)/$', views.get_table, name='table'),
 ]
