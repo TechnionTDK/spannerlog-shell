@@ -34,7 +34,7 @@ def extract_table_schema(row):
             attr_type = "text"
 
         # table_schema["column" + str(cnt)] = attr_type
-        table_schema[val] = attr_type
+        table_schema[val.replace("-", "_")] = attr_type
         cnt += 1
 
     return table_schema
