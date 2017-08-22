@@ -10,30 +10,32 @@ import re
 
 from pprint import pprint
 
+
 def index(request):
-    return render(request, 'spannerlog/index.html', {})
+  return render(request, 'spannerlog/index.html', {})
+
 
 @csrf_exempt
 def run(request):
-    print(bcolors.OKBLUE + "New incoming request" + bcolors.ENDC)
-    pprint(request.POST)
+  print(bcolors.OKBLUE + "New incoming request" + bcolors.ENDC)
+  pprint(request.POST)
 
-    try:
-        wrapper = Wrapper()
-        files = request.FILES.getlist('edb')
-        for f in files:
+  try:
+    wrapper = Wrapper()
+    files = request.FILES.getlist('edb')
+    for f in files:
+      wrapper.add_input_file(f)
+    
+    wrapper.write_program(request.POST['program'])
+    wrapper.run()
 
-            wrapper.add_input_file(f)
-        
-        wrapper.write_program(request.POST['program'])
+    data = wrapper.get_schema()
+  except WrapperException as e:
+    print(bcolors.FAIL)
+    print("WrapperException occured!")
+    print(str(e))
 
-        data = wrapper.run()
-    except WrapperException as e:
-        print(bcolors.FAIL)
-        print("WrapperException occured!")
-        print(str(e))
+    ansi_escape = re.compile(r'\x1b[^m]*m')
+    return HttpResponse(ansi_escape.sub('', str(e)), status=500)
 
-        ansi_escape = re.compile(r'\x1b[^m]*m')
-        return HttpResponse(ansi_escape.sub('', str(e)), status=500)
-  
-    return HttpResponse(data, content_type='application/json')
+  return HttpResponse(data, content_type='application/json')
