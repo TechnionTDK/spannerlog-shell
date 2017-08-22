@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# logging-with-ts -- Logs stdin to a file with timestamp on each line
+# logging-with-ts -- Logs input line with timestamp
 set -eu
 if [[ $# -gt 0 ]]; then
-    for f; do mkdir -p "$(dirname "$f")"; done
-    exec ts "%F %H:%M:%.S" | tee -a "$@"
+    echo "$1" | ts "%F %H:%M:%.S"
 else
-    exec ts "%F %H:%M:%.S"
+    cat | ts "%F %H:%M:%.S"
 fi
