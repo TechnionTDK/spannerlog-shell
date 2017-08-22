@@ -45,9 +45,7 @@ class Wrapper(object):
 
     table.append(header)
 
-    cur.execute("""
-      SELECT * FROM %s LIMIT 10;
-      """, (table_name,)) 
+    cur.execute('SELECT * FROM %s LIMIT 10;' % (table_name,)) 
     rows = cur.fetchall()
 
     table = table + rows
