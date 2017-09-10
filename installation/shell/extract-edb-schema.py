@@ -29,7 +29,7 @@ def main():
             out, err = df.communicate()
 
 
-    print(json.dumps(db_schema, sort_keys=True, indent=4))
+    print(json.dumps(db_schema, sort_keys=False, indent=4))
 
 
 def extract_table_schema(headers, record):
