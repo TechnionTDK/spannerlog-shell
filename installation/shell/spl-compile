@@ -39,24 +39,24 @@ logging-with-ts " $cmd"
 (compile-rgx-to-sql.py target/compiled.spl.json) > target/rgx.sql           # compile regex formulas into an sql script
 (compile-exec-plan-to-bash.py target/compiled.spl.json) > target/run.sh     # generate execution script
 
-cd target
-chmod -R 777 .* 
-deepdive compile                            # compile ddlog program
-deepdive db init                            # initialize databases
-deepdive do process/init/app > /dev/null    # initialize ddlog app
+# cd target
+# chmod -R 777 .* 
+# deepdive compile                            # compile ddlog program
+# deepdive db init                            # initialize databases
+# deepdive do process/init/app > /dev/null    # initialize ddlog app
 
-# add procedural code to postgres
-url=$(eval echo "$(cat db.url)")
-db=${url##*/}
-psql -d $db -c "CREATE EXTENSION plpythonu" | logging-with-ts
-logging-with-ts "Importing built-in IEFs"
-psql -d $db -f "$SPL_HOME/lib/ner.sql" | logging-with-ts        # always?
-psql -d $db -f "$SPL_HOME/lib/ssplit.sql" | logging-with-ts
-if [[ -e rgx.sql ]] && [ -s rgx.sql ]; then
-    logging-with-ts "Importing auto-generated regex formulas"
-    psql -d $db -f rgx.sql
-fi
+# # add procedural code to postgres
+# url=$(eval echo "$(cat db.url)")
+# db=${url##*/}
+# psql -d $db -c "CREATE EXTENSION plpythonu" | logging-with-ts
+# logging-with-ts "Importing built-in IEFs"
+# psql -d $db -f "$SPL_HOME/lib/ner.sql" | logging-with-ts        # always?
+# psql -d $db -f "$SPL_HOME/lib/ssplit.sql" | logging-with-ts
+# if [[ -e rgx.sql ]] && [ -s rgx.sql ]; then
+#     logging-with-ts "Importing auto-generated regex formulas"
+#     psql -d $db -f rgx.sql
+# fi
 
-cd ..
+# cd ..
 
 # Compilation completed. Ready to run.
