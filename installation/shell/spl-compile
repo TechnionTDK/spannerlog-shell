@@ -18,6 +18,8 @@ if [[ -d edb ]]; then
     ln -s "../edb" "target/input"
     (extract-edb-schema.py edb) > target/edb.schema.json
     schema+=(-edb target/edb.schema.json)
+mkdir -p edb
+echo "column1\n2" > edb/dummy.csv
 # else
 #   echo "[INFO] 'edb' folder does not exist" >&2
 fi
