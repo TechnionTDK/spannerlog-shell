@@ -20,9 +20,6 @@ ln -s "../edb" "target/input"
 (extract-edb-schema.py edb) > target/edb.schema.json
 schema+=(-edb target/edb.schema.json)
 
-# else
-#   echo "[INFO] 'edb' folder does not exist" >&2
-fi
 if [[ -d ief ]]; then
     (extract-ief-schema.py ief) > target/ief.schema.json
     schema+=(-ief target/ief.schema.json)
