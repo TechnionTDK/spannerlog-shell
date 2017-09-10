@@ -22,8 +22,6 @@ def main():
                 table_name = os.path.splitext(filename)[0]
                 headers = next(reader)
                 record = next(reader)
-                print(headers)
-                print(record)
                 db_schema[table_name] = extract_table_schema(headers, record)
 
             cmd = "tail -n +2 %s > %s.temp; mv %s.temp %s" % (filepath, filepath, filepath, filepath)
