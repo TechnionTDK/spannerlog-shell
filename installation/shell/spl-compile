@@ -11,12 +11,16 @@ logging-with-ts "Deleting old target directory and creating new one"
 rm -rf target
 mkdir target
 mkdir target/udf
+mkdir target/input
 
 schema=()
 ln -s "../db.url" "target/db.url"
 mkdir -p edb
 printf "column1\n2" > edb/dummy.csv
-ln -s "../edb" "target/input"
+for f in edb/*; do
+  cmd = "tail -n +2 $f > target/input/"
+done
+# ln -s "../edb" "target/input"
 (extract-edb-schema.py edb) > target/edb.schema.json
 schema+=(-edb target/edb.schema.json)
 

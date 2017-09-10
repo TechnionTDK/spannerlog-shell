@@ -24,9 +24,10 @@ def main():
                 record = next(reader)
                 db_schema[table_name] = extract_table_schema(headers, record)
 
-            cmd = "tail -n +2 %s > %s.temp; mv %s.temp %s" % (filepath, filepath, filepath, filepath)
-            df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-            out, err = df.communicate()
+            # Removing header line for DeepDive.
+            # cmd = "tail -n +2 %s > %s.temp; mv %s.temp %s" % (filepath, filepath, filepath, filepath)
+            # df = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            # out, err = df.communicate()
 
 
     print(json.dumps(db_schema, sort_keys=False, indent=4))
