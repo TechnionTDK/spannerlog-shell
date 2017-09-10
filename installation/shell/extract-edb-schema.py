@@ -20,8 +20,8 @@ def main():
                 reader = csv.reader(infile, delimiter=delim)
                 
                 table_name = os.path.splitext(filename)[0]
-                headers = reader.next()
-                record = reader.next()
+                headers = next(reader)
+                record = next(reader)
                 print(headers)
                 print(record)
                 db_schema[table_name] = extract_table_schema(headers, record)
