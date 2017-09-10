@@ -58,9 +58,9 @@ psql -d $db -f "$SPL_HOME/lib/ner.sql" | logging-with-ts        # always?
 psql -d $db -f "$SPL_HOME/lib/ssplit.sql" | logging-with-ts
 if [[ -e rgx.sql ]] && [ -s rgx.sql ]; then
     logging-with-ts "Importing auto-generated regex formulas"
-    psql -d $db -f rgx.sql
+    psql -d $db -f rgx.sql | logging-with-ts
 fi
 
 cd ..
 
-Compilation completed. Ready to run.
+# Compilation completed. Ready to run.

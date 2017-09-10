@@ -1,4 +1,4 @@
-CREATE FUNCTION ssplit (s text)
+CREATE FUNCTION sentence (s text)
     RETURNS TABLE (sentence_index int, sentence_start int, sentence_end int)
 AS $$
 from pycorenlp import StanfordCoreNLP
