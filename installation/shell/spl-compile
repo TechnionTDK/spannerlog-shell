@@ -18,9 +18,7 @@ ln -s "../db.url" "target/db.url"
 mkdir -p edb
 printf "column1\n2" > edb/dummy.csv
 for f in edb/*; do	
-  filename=$(basename $f)	
-  echo $filename
-  (tail -n +2 $filename > target/input/$filename)
+  (tail -n +2 $f > target/input/$(basename $f))
 done
 # ln -s "../edb" "target/input"
 (extract-edb-schema.py edb) > target/edb.schema.json
