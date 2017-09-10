@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 def main():
 
-    db_schema = {}
+    db_schema = OrderedDict()
 
     for filename in os.listdir(sys.argv[1]):
         if filename.endswith('.tsv') or filename.endswith('.csv'):
