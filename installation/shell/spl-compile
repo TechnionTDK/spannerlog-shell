@@ -18,6 +18,7 @@ ln -s "../db.url" "target/db.url"
 mkdir -p edb
 printf "column1\n2" > edb/dummy.csv
 for f in edb/*; do
+  echo $f	
   (tail -n +2 $f > target/input/$f)
 done
 # ln -s "../edb" "target/input"
