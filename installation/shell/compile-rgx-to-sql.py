@@ -31,17 +31,23 @@ def create_regex_udf(ief, attrs):
 			table_cols.append("%s_start int" % (attr_name, ))
 			table_cols.append("%s_end int" % (attr_name, ))
 	print("CREATE FUNCTION %s(s text)" % (ief["name"], ))
-	print("\tRETURNS TABLE (%s)" % (", ".join(table_cols), ))
+	if attrs:
+		print("\tRETURNS TABLE (%s)" % (", ".join(table_cols), ))
+	else:
+		print("\tRETURNS boolean")
 	print("AS $$\n")
 	print("import re\n")
 	print("pattern = re.compile(r\"%s\")" % (ief['regex'], ))
 	print("match = pattern.match(s)")
-	print("if match:")
-	print("\tyield [")
-	for attr in list(attrs.keys())[1:]:
-		print("\t\tmatch.start('%s') + 1," % (attr, ))
-		print("\t\tmatch.end('%s') + 1," % (attr, ))
-	print("\t]\n")
+	if attrs:
+		print("if match:")
+		print("\tyield [")
+		for attr in list(attrs.keys())[1:]:
+			print("\t\tmatch.start('%s') + 1," % (attr, ))
+			print("\t\tmatch.end('%s') + 1," % (attr, ))
+		print("\t]\n")
+	else:
+		print("\treturn match is not None")
 	print("$$ LANGUAGE plpythonu;")
 	# print("\telse:\n")
 	# print("\t\tyield [\"ds\",1,2,3,4]\n\n")

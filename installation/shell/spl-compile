@@ -57,6 +57,7 @@ logging-with-ts "Importing built-in IEFs"
 psql -d $db -f "$SPL_HOME/lib/ner.sql" | logging-with-ts        # always?
 psql -d $db -f "$SPL_HOME/lib/sentence.sql" | logging-with-ts
 psql -d $db -f "$SPL_HOME/lib/lowercase.sql" | logging-with-ts
+psql -d $db -f "$SPL_HOME/lib/sentiment.sql" | logging-with-ts
 if [[ -e rgx.sql ]] && [ -s rgx.sql ]; then
     logging-with-ts "Importing auto-generated regex formulas"
     psql -d $db -f rgx.sql | logging-with-ts
