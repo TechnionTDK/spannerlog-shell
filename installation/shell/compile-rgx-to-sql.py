@@ -34,7 +34,7 @@ def create_regex_udf(ief, attrs):
 	if table_cols:
 		print("\tRETURNS TABLE (%s)" % (", ".join(table_cols), ))
 	else:
-		print("\tRETURNS boolean")
+		print("\tRETURNS TABLE (dummy boolean)")
 	print("AS $$\n")
 	print("import re\n")
 	print("pattern = re.compile(r\"%s\")" % (ief['regex'], ))
@@ -47,7 +47,10 @@ def create_regex_udf(ief, attrs):
 			print("\t\tmatch.end('%s') + 1," % (attr, ))
 		print("\t]\n")
 	else:
-		print("return match is not None")
+		print("if match is not None:")
+		print("\treturn [True]")
+		print("else:")
+		print("\treturn [False]")
 	print("$$ LANGUAGE plpythonu;\n\n")
 	# print("\telse:\n")
 	# print("\t\tyield [\"ds\",1,2,3,4]\n\n")
