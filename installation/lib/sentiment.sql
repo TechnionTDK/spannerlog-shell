@@ -10,8 +10,8 @@ props={'annotators': 'sentiment'}
 annotations = json.loads(nlp.annotate(s, properties=props))
 for i, sen in enumerate(a["sentences"]):
     if sen["tokens"]:
-    begin = sen["tokens"][0]["characterOffsetBegin"]
-    end = sen["tokens"][-1]["characterOffsetEnd"]
-    yield [begin, end, sen["sentiment"], sen["sentimentValue"]]
+        begin = sen["tokens"][0]["characterOffsetBegin"]
+        end = sen["tokens"][-1]["characterOffsetEnd"]
+        yield [begin, end, sen["sentiment"], sen["sentimentValue"]]
 
 $$ LANGUAGE plpythonu;

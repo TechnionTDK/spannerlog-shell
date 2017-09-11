@@ -31,7 +31,7 @@ def create_regex_udf(ief, attrs):
 			table_cols.append("%s_start int" % (attr_name, ))
 			table_cols.append("%s_end int" % (attr_name, ))
 	print("CREATE FUNCTION %s(s text)" % (ief["name"], ))
-	if attrs:
+	if table_cols:
 		print("\tRETURNS TABLE (%s)" % (", ".join(table_cols), ))
 	else:
 		print("\tRETURNS boolean")
@@ -39,7 +39,7 @@ def create_regex_udf(ief, attrs):
 	print("import re\n")
 	print("pattern = re.compile(r\"%s\")" % (ief['regex'], ))
 	print("match = pattern.match(s)")
-	if attrs:
+	if table_cols:
 		print("if match:")
 		print("\tyield [")
 		for attr in list(attrs.keys())[1:]:
