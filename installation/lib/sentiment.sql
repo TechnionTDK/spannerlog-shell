@@ -8,7 +8,7 @@ import json
 nlp = StanfordCoreNLP('http://localhost')
 props={'annotators': 'sentiment'}
 annotations = json.loads(nlp.annotate(s, properties=props))
-for i, sen in enumerate(a["sentences"]):
+for i, sen in enumerate(annotations["sentences"]):
     if sen["tokens"]:
         begin = sen["tokens"][0]["characterOffsetBegin"]
         end = sen["tokens"][-1]["characterOffsetEnd"]
