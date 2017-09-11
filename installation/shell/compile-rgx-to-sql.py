@@ -48,9 +48,9 @@ def create_regex_udf(ief, attrs):
 		print("\t]\n")
 	else:
 		print("if match is not None:")
-		print("\treturn [True]")
+		print("\treturn [True]") # match
 		print("else:")
-		print("\treturn [False]")
+		print("\treturn []") # mismatch
 	print("$$ LANGUAGE plpythonu;\n\n")
 	# print("\telse:\n")
 	# print("\t\tyield [\"ds\",1,2,3,4]\n\n")
