@@ -47,8 +47,8 @@ def create_regex_udf(ief, attrs):
 			print("\t\tmatch.end('%s') + 1," % (attr, ))
 		print("\t]\n")
 	else:
-		print("\treturn match is not None")
-	print("$$ LANGUAGE plpythonu;")
+		print("return match is not None")
+	print("$$ LANGUAGE plpythonu;\n\n")
 	# print("\telse:\n")
 	# print("\t\tyield [\"ds\",1,2,3,4]\n\n")
 
