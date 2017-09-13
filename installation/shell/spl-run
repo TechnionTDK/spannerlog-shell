@@ -9,5 +9,10 @@ cd target
 # deepdive do process/init/relation/articles
 # deepdive do data/articles
 
+start=$(date +%s%N)
 ./run.sh # Run generated execution script
+end=$(date +%s%N)
+logging-with-ts "Elapsed running time:"
+(bc <<< "scale = 20; ($end-$start)/1000000000") | logging-with-ts
+
 cd ..
