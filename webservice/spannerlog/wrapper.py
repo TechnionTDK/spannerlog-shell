@@ -44,7 +44,7 @@ class Wrapper(object):
     header = tuple(rec[0] for rec in rows)
     new_header = []
     spans = []
-    for i,_ in enumerate(header)[:-1]:
+    for i,_ in enumerate(header[:-1]):
       if header[i].endswith("_end"):
         continue
       if header[i].endswith("_start") and header[i+1].endswith("_end"):
