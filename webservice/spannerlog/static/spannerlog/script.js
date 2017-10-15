@@ -164,7 +164,13 @@ $(document).ready(function() {
 
   // Submit on clicking the 'submit' button
   $('#submit').click(function() {
-    // Get the program to run    
+    // Get the program to run  
+
+    if(document.getElementById("edb").files.length == 0){
+      if(!confirm("No input files selected")) {
+        return false;
+      }
+    }  
     currentQuery = $('#text').val();
     if (currentQuery.trim() == '') {
       currentQuery = 'Q(s, x, s[x]) <- Articles(_,s,_,_,_,_), NER<s>(x, "ORGANIZATION").';
