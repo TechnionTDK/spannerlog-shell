@@ -42,13 +42,35 @@ class Wrapper(object):
       """, (table_name,)) 
     rows = cur.fetchall()
     header = tuple(rec[0] for rec in rows)
+    new_header = []
+    spans = []
+    for i,_ in enumerate(header)[:-1]:
+      if header[i].endswith("_end"):
+        continue
+      if header[i].endswith("_start") and header[i+1].endswith("_end"):
+        spans.append(i)
+        new_header.append(header[i][:-6])
+      else:
+        new_header.append(header[i])
 
-    table.append(header)
+    table.append(tuple(new_header))
 
     cur.execute('SELECT * FROM %s LIMIT 10;' % (table_name,)) 
     rows = cur.fetchall()
+    new_rows = []
 
-    table = table + rows
+    for row in rows:
+      new_row = []
+      for i,_ in enumerate(row):
+        if i-1 in spans:
+          continue
+        if i in spans:
+          new_row.append("[%d,%d>" % (row[i],row[i+1]))
+        else:
+          new_row.append(row[i])
+      new_rows.append(tuple(new_row))
+          
+    table = table + new_rows
 
     data = json.dumps(table)
 
