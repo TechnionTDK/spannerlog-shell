@@ -27,7 +27,7 @@ for idx, (token, category, (m,n)) in enumerate(entities):
             else:
                 entity_start = -1
                 entity_end = -1
-                ner_prev = "O"
+                prev_category = "O"
 if entity_start != -1:
     yield [entity_start + 1, entity_end + 1, prev_category]
 
