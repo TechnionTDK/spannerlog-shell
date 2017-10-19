@@ -18,7 +18,7 @@ def main():
         #     print("deepdive do process/init/relation/" + name + " > /dev/null")
         #     print("deepdive do data/" + name + " > /dev/null")
 
-        print("deepdive do all > /dev/null")
+        # print("deepdive do all > /dev/null")
 
         for name, steps in conf["execution"]["idb"].items():
             sql_steps = []
