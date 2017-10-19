@@ -63,8 +63,9 @@ if [[ -e rgx.sql ]] && [ -s rgx.sql ]; then
     psql -d $db -f rgx.sql | logging-with-ts
 fi
 
-# load edb to database
-print("deepdive do all > /dev/null")
+logging-with-ts "Loading edb to database..."
+(deepdive do all > /dev/null)
+logging-with-ts "done"
 
 cd ..
 
