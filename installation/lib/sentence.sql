@@ -3,6 +3,7 @@ CREATE FUNCTION sentence (s text)
 AS $$
 from pycorenlp import StanfordCoreNLP
 nlp = StanfordCoreNLP('http://localhost:9000')
+s = s.decode('utf-8','ignore').encode("utf-8")
 res = nlp.annotate(s, properties={
     'annotators': 'ssplit',
     'outputFormat': 'json'
