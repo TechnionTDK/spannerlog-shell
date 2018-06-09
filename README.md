@@ -1,12 +1,7 @@
-# spannerlog-shell
+# Spannerlog Shell
 
-## Installation
-1. Export [Spannerlog](https://github.com/TechnionTDK/spannerlog) into a jar file, and place it in `installation/` under the name `spannerlog-1.0-SNAPSHOT.jar`.
-2. Add `bin/` to the `$PATH` variable: `export path='~/path/to/installation/bin`.
+This is the source code of Spannerlog that is part of Yoav Nahshon's research thesis for the degree of Master in Science in Computer Science from the Department of Computer Science at the Technion.
 
-## Running
-The following command shows all available commands.
+The code here contains all the components appearing in Figure 5.1 of the thesis' essay, with the exception of the compiler component that is hosted by [a separate repository][spannerlog].
 
-```bash
-splog
-```
+[spannerlog]: <https://github.com/TechnionTDK/spannerlog>
